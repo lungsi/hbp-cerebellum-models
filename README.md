@@ -29,7 +29,7 @@ cd hbp-cerebellum-models
 from models import model_manager as mm
 ```
 
-There models in the `hbp-cerebellum-models` pack is broken down to three **model_scale**: cells, microcircuit and network.
+The models in the `hbp-cerebellum-models` pack are broken down into three **model_scale**: cells, microcircuit and network.
 
 To see the names of the cellular models use the `model_manager.get_available_models` function
 ```
@@ -67,6 +67,20 @@ pc = cells.PC2015Masoli.PurkinjeCell()
      pc.produce_spike_train( cell_locations=['vm_soma'], thresh=[0.0] )
      ```
      NB: Non default example `pc.produce_spike_train( cell_locations=['vm_soma', 'NOR3'], thresh=[0.0, -1.0] )`
+
+5. To visualize the results
+first import the `plot_manager` module
+```
+from models import plot_manager as pm
+```
+Then to visualize the spikes
+```
+pm.visualize_spikes( model_name="PC2015Masoli", region_of_interest="vm_soma" )
+```
+or visualize the voltage response
+```
+pm.visualize_voltages( model_name="PC2015Masoli", region_of_interest="vm_soma" )
+```
 
 ## ~~Contribution~~
 
