@@ -5,6 +5,10 @@
 # modified 29 August 2017 Lungsi
 #
 # This py-file contains the class of the model.
+# The template of the model in the directory PC2015Masoli/
+# is based on http://dx.doi.org/10.3389/fncel.2015.00047
+# available in
+# https://senselab.med.yale.edu/ModelDB/showmodel.cshtml?model=229585
 #
 # The naming structure of the model is as follows
 # <UpperCaseLetters><Year><FirstAuthor>_model
