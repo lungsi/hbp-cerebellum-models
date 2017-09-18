@@ -80,7 +80,7 @@ class PurkinjeCell( sciunit.Model, ProducesSpikeTrain,
                 gmlp( model_scale = self.model_scale,
                       model_name = self.model_name )
         ccm(model_mod_path, model_lib_path)
-        print model_mod_path, model_lib_path, os.getcwd()
+        #print model_mod_path, model_lib_path, os.getcwd()
         #
         # load NEURON model library
         h.nrn_load_dll(model_lib_path)
