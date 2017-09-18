@@ -32,6 +32,7 @@
 # =============================================================================
 
 import os
+import subprocess
 
 from neuron import h
 
