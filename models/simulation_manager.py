@@ -2,7 +2,7 @@
 # simulation_manager.py
 #
 # created  26 July 2017 Lungsi
-# modified 29 August 2017 Lungsi
+# modified 21 September 2017 Lungsi
 #
 # This py-file contains file functions, initiated by
 #
@@ -31,12 +31,19 @@
 #
 # 4. simulation_manager.save_predictions ( cell_template,
 #                                          prediction_dir_path,
-#                                         "vm_soma", "vm_NOR3" )
+#                                         ["vm_soma", "vm_NOR3"] )
 #    note: This utility is implemented by the py-files (capability method)
 #          containing models written in NEURON simulator. For an instantiated
 #          model (template) the simulation result is saved in txt-file/s
 #          whose filename is given by "vm_soma", "vm_NOR3", etc ... These
 #          txt-file/s will be saved in the desired path.
+#
+# 5. simulation_manager.attach_predictions( cell_template,
+#                                           ["vm_soma, "vm_NOR3],
+#                                           cell_model,
+#                                           "voltage_response" )
+#    note: This utility is implemented by the py-file XXYearAuthor_modelname.py
+#          and attaches the prediction to the instantiated model class.
 #
 # =============================================================================
 
@@ -92,7 +99,7 @@ def check_capability_availability(capability_name="None",
         print(CerebUnitCapability.__name__ + " has the method " + capability_name)
 
 
-def save_predictions(cell_template, dir_path, cell_region): #*cell_properties
+def save_predictions(cell_template, dir_path, cell_regions): #*cell_properties
     """
     Use case: save_predictions(cell_template, prediction_dir_path,
                                cell_regions=["vm_soma", "vm_NOR3")
@@ -106,14 +113,30 @@ def save_predictions(cell_template, dir_path, cell_region): #*cell_properties
     dir_path = dir_path + os.sep
     time = np.array( getattr( cell_template, "rec_t") )
     #for cell_prop in cell_properties:
-    for i in range(len(cell_region)):
-        np.savetxt( dir_path + cell_region[i] + ".txt",
+    for i in range(len(cell_regions)):
+        np.savetxt( dir_path + cell_regions[i] + ".txt",
                     np.column_stack( ( time,
                                        np.array( getattr( cell_template,
-                                                          cell_region[i] )
+                                                          cell_regions[i] )
                                                )
                                      ) ),
                     delimiter = ' '
                     )
+
+#
+# created 21 September 2017
+def attach_predictions(cell_template, cell_regions, cell_model, reponse_type):
+    """
+    Use case: cell_regions=["vm_soma", "vm_NOR3"]
+              response_type="voltage_response"
+              cell_model = self # i.e the model class
+              attach_predictions(cell_template, cell_regions,
+                                 cell_model, reponse_type)
+    """
+    cell_model.predictions.update( { response_type: {} } )
+    for location in cell_regions:
+        a_prediction = {location: np.array( getattr(cell_template, location) )}
+        cell_model.predictions[response_type].update(a_prediction)
+
 #
 #

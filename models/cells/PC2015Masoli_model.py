@@ -2,7 +2,7 @@
 # PC2015Masoli_model.py
 #
 # created  01 August 2017 Lungsi
-# modified 29 August 2017 Lungsi
+# modified 21 September 2017 Lungsi
 #
 # This py-file contains the class of the model.
 # The template of the model in the directory PC2015Masoli/
@@ -52,6 +52,7 @@ from ..simulation_manager import check_capability_availability as cca
 from ..simulation_manager import discover_cores_activate_multisplit as dcam
 from ..simulation_manager import initialize_and_run_NEURON_model as irNm
 from ..simulation_manager import save_predictions as sp
+from ..simulation_manager import attach_predictions as ap
 from ..signal_processing_manager import convert_vm_to_spike_train as getspikes
 from PC2015Masoli.Purkinje import Purkinje
 
@@ -103,6 +104,11 @@ class PurkinjeCell( sciunit.Model, ProducesSpikeTrain,
         # pc.name defaults to class name, i.e, PurkinjeCell
         self.name = "Masoli et al. 2015 model of PurkinjeCell"
         self.description = "Masoli et al. 2015 model of PurkinjeCell (PC) and published in 10.3389/fncel.2015.00047 This is general PC model unlike special Z+ or Z- models. The model is based on adult (P90 or 3 months) Guinea pig. PC in younger ones are not mature and they grow until P90. This model is the SciUnit wrapped version of the NEURON model in modelDB accession # 229585."
+        #
+        # =========model predictions attached to the model object========
+        # Note: this is not part of inherited attributes from sciuni.Model
+        self.predictions = {}  # added 21 Sept 2017
+        #
     
 
     # +++++++++++++++Model Capability: produce_spike_train++++++++++++++++
@@ -147,6 +153,9 @@ class PurkinjeCell( sciunit.Model, ProducesSpikeTrain,
         # when the spikes occured.
         # These times @ spike occurrences are written into .txt file.
         #
+        # attach spike train response to the model (created 21 Sept 2017)
+        self.predictions.update( {"spike_train": {}} )
+        #
         for i in range(len(cell_locations)):
             # load and extract time stamps and corressponding voltages
             #file_path = gfp( dir_names=["model-predictions", "cells",
@@ -161,13 +170,16 @@ class PurkinjeCell( sciunit.Model, ProducesSpikeTrain,
             np.savetxt( self.prediction_dir_path + os.sep + \
                         "spikes_" + cell_locations[i] + ".txt",
                         spikes )
+            # attach the spikes (created 21 Sept 2017)
+            a_prediction = {cell_locations[i]: spikes}
+            self.predictions["spike_train"].update(a_prediction)
         # ===============================================================
         print " Done!"
 
 
     # ++++++++++++Model Capability: produce_voltage_response+++++++++++++
     # created:  03 August 2017
-    # modified: 27 August 2017
+    # modified: 21 September 2017
     # Note: This function name should be the same as the method name in
     #       ProducesElectricalResponse.
     #       This function takes two arguments:
@@ -196,6 +208,11 @@ class PurkinjeCell( sciunit.Model, ProducesSpikeTrain,
                                            self.model_scale,
                                            self.model_name )
         sp(self.cell, self.prediction_dir_path, cell_regions)
+        # ====================================================================
+        #
+        # =============Attach prediction to the model object==================
+        # created 21 September 2017
+        ap(self.cell, cell_regions, self, "voltage_response")
         # ====================================================================
         print " Done!"
     
