@@ -125,7 +125,7 @@ def save_predictions(cell_template, dir_path, cell_regions): #*cell_properties
 
 #
 # created 21 September 2017
-def attach_predictions(cell_template, cell_regions, cell_model, reponse_type):
+def attach_predictions(cell_template, cell_regions, cell_model, response_type):
     """
     Use case: cell_regions=["vm_soma", "vm_NOR3"]
               response_type="voltage_response"
