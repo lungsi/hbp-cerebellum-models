@@ -10,7 +10,7 @@
 #
 # and individual file_manager initiated by:
 #
-# 1. signal_processing_manager.convert_vm_to_spike_train
+# 1. signal_processing_manager.convert_vm_to_spike_train_from_file
 #            ( path_to_file=
 #                "/model-predictions/cells/PC2015Masoli/vm_soma.txt"
 #              theta=0.0 )
@@ -30,9 +30,10 @@ from elephant.spike_train_generation import peak_detection as pd
 from quantities import mV
 
 
-def convert_vm_to_spike_train( path_to_file="/file/path", theta=0.0):
+def convert_vm_to_spike_train_from_file( path_to_file="/file/path",
+                                         theta=0.0):
     """
-    Use case: convert_vm_to_spike_train()
+    Use case: convert_vm_to_spike_train_from_file()
     """
     # ============Extract spikes from Voltage Response==============
     # for each location load the file containing voltage response
@@ -62,6 +63,32 @@ def convert_vm_to_spike_train( path_to_file="/file/path", theta=0.0):
     # ===============================================================
 
 
+def convert_voltage_response_to_spike_train( model ):
+    """
+    Use case: convert_voltage_response_to_spike_train
+    """
+    response_type = "spike_train"
+    model.predictions.update( { response_type: {} } )
+    for cell_region, with_thresh in model.cell_regions.iteritems():
+        t_vm = model.predictions["voltage_response"][cell_region]
+        # convert voltage response into analog signal
+        signal = iss( t_vm[:,0], t_vm[:,1], units='mV', time_units='ms' )
+        # determine the signal sign from the analog signal based on thresh
+        signal_sign = [ "above" if np.sign(x)==0 or 0.0 or
+                                               1 or 1.0
+                                else "below"
+                                for x in [with_thresh] ][0]
+        # based on the signal_sign and threshold extract spikes from
+        # the analog signal
+        spikes = pd( signal,
+                     threshold=np.array(with_thresh)*mV,
+                     sign=signal_sign,
+                     format=None )
+        # attach the spike train into the model
+        a_prediction = {cell_region: spikes}
+        model.predictions[response_type].update(a_prediction)
+
+        
 #def foo()
 #
 #

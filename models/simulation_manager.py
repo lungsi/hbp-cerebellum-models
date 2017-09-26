@@ -2,7 +2,6 @@
 # simulation_manager.py
 #
 # created  26 July 2017 Lungsi
-# modified 21 September 2017 Lungsi
 #
 # This py-file contains file functions, initiated by
 #
@@ -29,21 +28,13 @@
 #          current capability is available in the cerebunit module. If not
 #          it returns an AttributeError.
 #
-# 4. simulation_manager.save_predictions ( cell_template,
-#                                          prediction_dir_path,
-#                                         ["vm_soma", "vm_NOR3"] )
+# 4. simulation_manager.save_predictions ( model,
+#                                          prediction_dir_path )
 #    note: This utility is implemented by the py-files (capability method)
 #          containing models written in NEURON simulator. For an instantiated
 #          model (template) the simulation result is saved in txt-file/s
 #          whose filename is given by "vm_soma", "vm_NOR3", etc ... These
 #          txt-file/s will be saved in the desired path.
-#
-# 5. simulation_manager.attach_predictions( cell_template,
-#                                           ["vm_soma, "vm_NOR3],
-#                                           cell_model,
-#                                           "voltage_response" )
-#    note: This utility is implemented by the py-file XXYearAuthor_modelname.py
-#          and attaches the prediction to the instantiated model class.
 #
 # =============================================================================
 
@@ -99,11 +90,15 @@ def check_capability_availability(capability_name="None",
         print(CerebUnitCapability.__name__ + " has the method " + capability_name)
 
 
-def save_predictions(cell_template, dir_path, cell_regions): #*cell_properties
+# created  18 August 2016 Lungsi
+# modified 22 September 2017 Lungsi
+def save_predictions(model, response_type, dir_path):
     """
-    Use case: save_predictions(cell_template, prediction_dir_path,
-                               cell_regions=["vm_soma", "vm_NOR3")
-    where cell_template = Purkinje() is the instantiated Python class of the
+    Use case: save_predictions(model, model.prediction_dir_pat)
+    where model = self and therefore
+          model.cell = Purkinje() # cell_template
+          model.cell_regions = {"vm_soma": 0.0, "vm_NOR3": 0.0}
+    Here cell_template = Purkinje() is the instantiated Python class of the
     NEURON model. prediction_dir_path is the path obtained by calling the
     check_and_make_directory() function; for eg.,
     check_and_make_directory("model-predictions", "cells", "PC2015Masoli")
@@ -111,32 +106,27 @@ def save_predictions(cell_template, dir_path, cell_regions): #*cell_properties
     that represent NEURON cell properties.
     """
     dir_path = dir_path + os.sep
-    time = np.array( getattr( cell_template, "rec_t") )
-    #for cell_prop in cell_properties:
-    for i in range(len(cell_regions)):
-        np.savetxt( dir_path + cell_regions[i] + ".txt",
+    if response_type=="voltage_response":
+        model.predictions.update( { response_type: {} } )
+        time = np.array( getattr( model.cell, "rec_t") )
+        for cell_region, with_thresh in model.cell_regions.iteritems():
+            t_vm_array = \
                     np.column_stack( ( time,
-                                       np.array( getattr( cell_template,
-                                                          cell_regions[i] )
-                                               )
-                                     ) ),
-                    delimiter = ' '
-                    )
-
-#
-# created 21 September 2017
-def attach_predictions(cell_template, cell_regions, cell_model, response_type):
-    """
-    Use case: cell_regions=["vm_soma", "vm_NOR3"]
-              response_type="voltage_response"
-              cell_model = self # i.e the model class
-              attach_predictions(cell_template, cell_regions,
-                                 cell_model, reponse_type)
-    """
-    cell_model.predictions.update( { response_type: {} } )
-    for location in cell_regions:
-        a_prediction = {location: np.array( getattr(cell_template, location) )}
-        cell_model.predictions[response_type].update(a_prediction)
+                                       np.array( getattr( model.cell,
+                                                          cell_region ) )
+                                        ) )
+            # save the a_prediction into a .txt file
+            np.savetxt( dir_path + cell_region + ".txt",
+                        t_vm_array,
+                        delimiter = ' ' )
+            # attach the a_prediction to the model
+            a_prediction = {cell_region: t_vm_array}
+            model.predictions[response_type].update(a_prediction)
+            #
+    elif response_type=="spike_train":
+        for cell_region, with_thresh in model.cell_regions.iteritems():
+            spikes = model.predictions[response_type][cell_region]
+            np.savetxt( dir_path + "spikes+" + cell_region + ".txt", spikes )
 
 #
 #

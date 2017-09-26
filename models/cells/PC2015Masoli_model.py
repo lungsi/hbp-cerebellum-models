@@ -2,7 +2,6 @@
 # PC2015Masoli_model.py
 #
 # created  01 August 2017 Lungsi
-# modified 21 September 2017 Lungsi
 #
 # This py-file contains the class of the model.
 # The template of the model in the directory PC2015Masoli/
@@ -42,6 +41,9 @@ import sciunit
 import numpy as np
 from cerebunit.capabilities.cells.response import ProducesSpikeTrain
 from cerebunit.capabilities.cells.response import ProducesElectricalResponse
+# below two are needed to convert the voltage_response to spike_train
+from quantities import mV
+from elephant.spike_train_generation import peak_detection as pd
 
 #from ..file_manager import get_file_path as gfp
 from ..file_manager import get_prediction_file as gpf
@@ -52,8 +54,8 @@ from ..simulation_manager import check_capability_availability as cca
 from ..simulation_manager import discover_cores_activate_multisplit as dcam
 from ..simulation_manager import initialize_and_run_NEURON_model as irNm
 from ..simulation_manager import save_predictions as sp
-from ..simulation_manager import attach_predictions as ap
-from ..signal_processing_manager import convert_vm_to_spike_train as getspikes
+#from ..signal_processing_manager import convert_vm_to_spike_train_from_file as getspikes
+from ..signal_processing_manager import convert_voltage_response_to_spike_train as getspikes
 from PC2015Masoli.Purkinje import Purkinje
 
 
@@ -108,86 +110,59 @@ class PurkinjeCell( sciunit.Model, ProducesSpikeTrain,
         # =========model predictions attached to the model object========
         # Note: this is not part of inherited attributes from sciuni.Model
         self.predictions = {}  # added 21 Sept 2017
-        #
+        # =====save the predictions in model-predictions subfolders======
+        self.prediction_dir_path = cmdir( "model-predictions",
+                                           self.model_scale,
+                                           self.model_name )
+        # =====specify cell_regions from which you want predictions======
+        # created 22 Sept 2017
+        self.cell_regions = {"vm_soma": 0.0, "vm_NOR3": 0.0}
     
 
     # +++++++++++++++Model Capability: produce_spike_train++++++++++++++++
     # created:  03 August 2017
-    # modified: 29 August 2017
+    # modified: 22 September 2017
     # Note: This function name should be the same as the method name in
     #       ProducesSpikeTrain.
-    #       This function takes two arguments:
-    #       cell_locations = list of string
-    #       thresh = list of floats or integers FOR EACH cell_location
     # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    def produce_spike_train( self, cell_locations=["vm_soma"],
-                             thresh=[0.0] ):
+    def produce_spike_train( self ):
         """
-        Input: cell_locations=["vm_soma", "vm_NOR3"]
-               thresh = [0.0, 0.0] (for peak detection)
-               ====================removed======================
-               signal_up_down=["above", "down"] (for inhibitory signals)
-               =================================================
         Use case:
-           pc.produce_spike_train( cell_locations=["vm_soma","vm_NOR3"],
-                                   thresh=[0.0, 0.0] )
-                                   ============removed==============
-                                   signal_up_down=["above","down"] )
-                                   =================================
+           by default
+           pc.produce_spike_train()
+           customize
+           pc.cell_regions = {"vm_soma": 0.0, "vm_NOR3": 0.0} # default
+           # format is key=> cell region; value=> threshold
+           # now run
+           pc.produce_spike_train()
         """
         #
         # ===================Get Voltage Response=======================
         # by calling produce_voltage_response
-        # Input:  cell_locations=["vm_soma", "vm_NOR3", ...]
         # Output: self.prediction_dir_path and
         #         files in the path; vm_soma.txt, vm_NOR3.txt, ...
         #
-        self.produce_voltage_response(cell_regions=cell_locations)
+        self.produce_voltage_response()
         # ==============================================================
         #
         print(ProducesSpikeTrain.__name__ + " has the method " + "produce_spike_train" + " ... \n")
         #
-        # ============Extract spikes from Voltage Response==============
-        # for each location get the file_path containing voltage response
-        # based on this extract the spikes in the form of array of times
-        # when the spikes occured.
-        # These times @ spike occurrences are written into .txt file.
-        #
-        # attach spike train response to the model (created 21 Sept 2017)
-        self.predictions.update( {"spike_train": {}} )
-        #
-        for i in range(len(cell_locations)):
-            # load and extract time stamps and corressponding voltages
-            #file_path = gfp( dir_names=["model-predictions", "cells",
-            #                            "PC2015Masoli"],
-            #                 file_name=cell_locations[i] + ".txt" )
-            file_path = gpf( model_name=self.model_name,
-                             file_name=cell_locations[i] + ".txt" )
-            # convert voltage response into analog signal and get spikes
-            spikes = getspikes( path_to_file=file_path,
-                                theta=thresh[i] )
-            # save the spikes into .txt file (spikes_vm_soma.txt)
-            np.savetxt( self.prediction_dir_path + os.sep + \
-                        "spikes_" + cell_locations[i] + ".txt",
-                        spikes )
-            # attach the spikes (created 21 Sept 2017)
-            a_prediction = {cell_locations[i]: spikes}
-            self.predictions["spike_train"].update(a_prediction)
+        # ====convert voltage response predictions into spike trains=====
+        #self.spikes_from_all_regions = {}
+        getspikes( self ) # this also attaches the predictions
+        # ====save the prediction into a text file
+        sp(self, "spike_train", self.prediction_dir_path)
         # ===============================================================
         print " Done!"
 
 
     # ++++++++++++Model Capability: produce_voltage_response+++++++++++++
     # created:  03 August 2017
-    # modified: 21 September 2017
+    # modified: 22 September 2017
     # Note: This function name should be the same as the method name in
     #       ProducesElectricalResponse.
-    #       This function takes two arguments:
-    #       cell_regions = list of string
-    #       [NB: cell_regions is the same as cell_locations in
-    #            produce_spike_train]
     # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    def produce_voltage_response(self, cell_regions=["vm_soma", "vm_NOR3"]):
+    def produce_voltage_response( self ):
         print "Running " + self.model_name + " " + self.model_scale + " ... \n",
         #
         # ===========Implement produce_voltage_response capability============
@@ -204,16 +179,9 @@ class PurkinjeCell( sciunit.Model, ProducesSpikeTrain,
         #
         # =============Save predictions in "model_predictions"================
         #
-        self.prediction_dir_path = cmdir( "model-predictions",
-                                           self.model_scale,
-                                           self.model_name )
-        sp(self.cell, self.prediction_dir_path, cell_regions)
+        sp(self, "voltage_response", self.prediction_dir_path)
         # ====================================================================
         #
-        # =============Attach prediction to the model object==================
-        # created 21 September 2017
-        ap(self.cell, cell_regions, self, "voltage_response")
-        # ====================================================================
         print " Done!"
     
 
