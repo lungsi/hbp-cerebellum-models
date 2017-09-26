@@ -41,6 +41,7 @@ import sciunit
 import numpy as np
 from cerebunit.capabilities.cells.response import ProducesSpikeTrain
 from cerebunit.capabilities.cells.response import ProducesElectricalResponse
+from cerebunit.capabilities.cells.knockout_channels import CanKOAISChannels, CanKOCav2pt1Channels
 # below two are needed to convert the voltage_response to spike_train
 from quantities import mV
 from elephant.spike_train_generation import peak_detection as pd
@@ -61,8 +62,11 @@ from PC2015Masoli.Purkinje import Purkinje
 
 # ======================SciUNIT-CerebUNIT Based Model=======================
 #
-class PurkinjeCell( sciunit.Model, ProducesSpikeTrain,
-                    ProducesElectricalResponse ):
+class PurkinjeCell( sciunit.Model,
+                    ProducesSpikeTrain,
+                    ProducesElectricalResponse,
+                    CanKOAISChannels,
+                    CanKOCav2pt1Channels ):
     '''
     Use case: from models import cells
     pc = cells.PC2015Masoli.PurkinjeCell() # instantiate
@@ -183,6 +187,56 @@ class PurkinjeCell( sciunit.Model, ProducesSpikeTrain,
         # ====================================================================
         #
         print " Done!"
+    
+
+    # +++++++++++++++Model Capability: ko_AIS_channels+++++++++++++++++
+    # created:  26 September 2017
+    # modified: 
+    # Note: This function name should be the same as the method name in
+    #       CanKOAISChannels.
+    # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    def ko_AIS_channels( self ):
+        #
+        # ===============Implement ko_AIS_channels capability=================
+        # 
+        cca( capability_name = "ko_AIS_channels",
+             CerebUnitCapability = CanKOAISChannels ) # check capab.
+        #
+        self.cell.axonAIS.pcabar_Cav3_1 = 0
+        self.cell.axonAIS.gbar_Nav1_6 = 0
+        self.cell.axonAIS.pcabar_Cav2_1 = 0
+        # ====================================================================
+        #print " Done!"
+    
+
+    # +++++++++++++++Model Capability: ko_Cav2_1_channels++++++++++++++++
+    # created:  26 September 2017
+    # modified: 
+    # Note: This function name should be the same as the method name in
+    #       CanKOCap2pt1Channels.
+    # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    def ko_Cav2_1_channels( self ):
+        #
+        # ==============Implement ko_Cav2_1_channels capability===============
+        # 
+        cca( capability_name = "ko_Cav2_1_channels",
+             CerebUnitCapability = CanKOCav2ptChannels ) # check capab.
+        # soma
+        self.cell.soma.pcabar_Cav2_1 = 0
+        # AIS
+        self.cell.axonAIS.pcabar_Cav2_1 = 0
+        # dendrite
+        for d in self.cell.dend:
+            d.pcabar_Cav2_1 = 0
+        # Node of Ranviers
+        self.cell.axonNOR.pcabar_Cav2_1 = 0
+        self.cell.axonNOR2.pcabar_Cav2_1 = 0
+        self.cell.axonNOR3.pcabar_Cav2_1 = 0
+        # Collaterals
+        self.cell.axoncoll.pcabar_Cav2_1 = 0
+        self.cell.axoncoll2.pcabar_Cav2_1 = 0
+        # ====================================================================
+        #print " Done!"
     
 
     # +++++++++++++++++++++set_simulation_properties++++++++++++++++++++

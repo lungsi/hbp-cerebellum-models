@@ -94,7 +94,7 @@ def check_capability_availability(capability_name="None",
 # modified 22 September 2017 Lungsi
 def save_predictions(model, response_type, dir_path):
     """
-    Use case: save_predictions(model, model.prediction_dir_pat)
+    Use case: save_predictions(model, response_type, model.prediction_dir_pat)
     where model = self and therefore
           model.cell = Purkinje() # cell_template
           model.cell_regions = {"vm_soma": 0.0, "vm_NOR3": 0.0}
@@ -106,10 +106,17 @@ def save_predictions(model, response_type, dir_path):
     that represent NEURON cell properties.
     """
     dir_path = dir_path + os.sep
+    #
     if response_type=="voltage_response":
+        # create a container for storing/attaching the voltage responses
+        # to the model
         model.predictions.update( { response_type: {} } )
+        # get the times associated with each voltage response
         time = np.array( getattr( model.cell, "rec_t") )
+        # loop through each cell region to save the prediction into
+        # a .txt file and also attach the prediction into the model
         for cell_region, with_thresh in model.cell_regions.iteritems():
+            # create an array of time and voltage responses
             t_vm_array = \
                     np.column_stack( ( time,
                                        np.array( getattr( model.cell,
