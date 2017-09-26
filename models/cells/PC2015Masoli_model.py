@@ -41,7 +41,7 @@ import sciunit
 import numpy as np
 from cerebunit.capabilities.cells.response import ProducesSpikeTrain
 from cerebunit.capabilities.cells.response import ProducesElectricalResponse
-from cerebunit.capabilities.cells.knockout_channels import CanKOAISChannels, CanKOCav2pt1Channels
+from cerebunit.capabilities.cells.knockout import CanKOAISChannels, CanKOCav2pt1Channels
 # below two are needed to convert the voltage_response to spike_train
 from quantities import mV
 from elephant.spike_train_generation import peak_detection as pd
