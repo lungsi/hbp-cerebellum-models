@@ -66,7 +66,8 @@ class PurkinjeCell( sciunit.Model,
                     ProducesSpikeTrain,
                     ProducesElectricalResponse,
                     CanKOAISChannels,
-                    CanKOCav2pt1Channels ):
+                    CanKOCav2pt1Channels,
+                    CanDisconnectDendrites ):
     '''
     Use case: from models import cells
     pc = cells.PC2015Masoli.PurkinjeCell() # instantiate
@@ -238,6 +239,25 @@ class PurkinjeCell( sciunit.Model,
         # ====================================================================
         #print " Done!"
     
+
+    # +++++++++++++++Model Capability: disconnect_all_dendrites++++++++++++++++
+    # created:  03 October 2017
+    # modified: 
+    # Note: This function name should be the same as the method name in
+    #       CanDisconnectDendrites.
+    # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    def disconnect_all_dendrites( self ):
+        #
+        # ============Implement disconnect_all_dendrites capability============
+        # 
+        cca( capability_name = "disconnect_all_dendrites",
+             CerebUnitCapability = CanDisconnectDendrites ) # check capab.
+        #
+        for d in self.cell.dend:
+            h.disconnect(sec=d)
+        # ====================================================================
+        #print " Done!"
+
 
     # +++++++++++++++++++++set_simulation_properties++++++++++++++++++++
     # created:  03 August 2017
