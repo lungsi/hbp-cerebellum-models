@@ -299,8 +299,7 @@ class PurkinjeCell( sciunit.Model,
             stimulus.append( h.IClamp(0.5, sec=self.cell.soma) )
             stimulus[i].amp = current_parameters["current"+str(j)]["amp"]
             stimulus[i].dur = current_parameters["current"+str(j)]["dur"]
-            stimulus[i].delay = \
-                    current_parameters["current"+str(i)]["delay"]
+            stimulus[i].delay = current_parameters["current"+str(j)]["delay"]
     
 #
 # ==========================================================================
