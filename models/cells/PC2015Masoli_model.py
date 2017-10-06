@@ -245,6 +245,8 @@ class PurkinjeCell( sciunit.Model,
     # modified: 
     # Note: This function name should be the same as the method name in
     #       CanDisconnectDendrites.
+    #       This function disconnects all dendrite sections from its parents
+    #       NOT JUST FROM soma.
     # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     def disconnect_all_dendrites( self ):
         #
@@ -253,9 +255,9 @@ class PurkinjeCell( sciunit.Model,
         cca( capability_name = "disconnect_all_dendrites",
              CerebUnitCapability = CanDisconnectDendrites ) # check capab.
         #
-        #for d in self.cell.dend:
-        #    h.disconnect(sec=d)
-        h.disconnect(sec=self.cell.dend)
+        for d in self.cell.dend:
+            if h.SectionRef(sec = d).has_parent != 0:
+                h.disconnect(sec = d)
         # ====================================================================
         #print " Done!"
 
@@ -291,10 +293,12 @@ class PurkinjeCell( sciunit.Model,
         stimulus = []
         n = len(current_parameters) # number of currents
         # =============first create 'n' IClamps
+        j = 0;
         for i in range(n):
+            j += 1
             stimulus.append( h.IClamp(0.5, sec=self.cell.soma) )
-            stimulus[i].amp = current_parameters["current"+str(i)]["amp"]
-            stimulus[i].dur = current_parameters["current"+str(i)]["dur"]
+            stimulus[i].amp = current_parameters["current"+str(j)]["amp"]
+            stimulus[i].dur = current_parameters["current"+str(j)]["dur"]
             stimulus[i].delay = \
                     current_parameters["current"+str(i)]["delay"]
     
