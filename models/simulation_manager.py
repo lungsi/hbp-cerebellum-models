@@ -133,7 +133,7 @@ def save_predictions(model, response_type, dir_path):
     elif response_type=="spike_train":
         for cell_region, with_thresh in model.cell_regions.iteritems():
             spikes = model.predictions[response_type][cell_region]
-            np.savetxt( dir_path + "spikes+" + cell_region + ".txt", spikes )
+            np.savetxt( dir_path + "spikes_" + cell_region + ".txt", spikes )
 
 #
 #
