@@ -248,11 +248,11 @@ class PurkinjeCell( sciunit.Model,
     #       This function disconnects all dendrite sections from its parents
     #       NOT JUST FROM soma.
     # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    def disconnect_all_dendrites( self ):
+    def disconnect_dendrites_from_soma( self ):
         #
         # ============Implement disconnect_all_dendrites capability============
         # 
-        cca( capability_name = "disconnect_all_dendrites",
+        cca( capability_name = "disconnect_dendrites_from_soma",
              CerebUnitCapability = CanDisconnectDendrites ) # check capab.
         #
         #for d in self.cell.dend:
