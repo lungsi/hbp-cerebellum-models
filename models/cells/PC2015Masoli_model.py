@@ -255,9 +255,10 @@ class PurkinjeCell( sciunit.Model,
         cca( capability_name = "disconnect_all_dendrites",
              CerebUnitCapability = CanDisconnectDendrites ) # check capab.
         #
-        for d in self.cell.dend:
-            if h.SectionRef(sec = d).has_parent != 0:
-                h.disconnect(sec = d)
+        #for d in self.cell.dend:
+        #    if h.SectionRef(sec = d).has_parent != 0:
+        #        h.disconnect(sec = d)
+        h.disconnect(sec = self.cell.dend[0])
         # ====================================================================
         #print " Done!"
 
