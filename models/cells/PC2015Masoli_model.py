@@ -291,13 +291,14 @@ class PurkinjeCell( sciunit.Model,
     #       v_init =
     # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     def set_stimulation_properties( self, current_parameters ):
-        stimulus = []
+        #stimulus = []
+        stimulus = [ h.IClamp(0.5, sec=self.cell.soma) ]
         n = len(current_parameters) # number of currents
         # =============first create 'n' IClamps
         j = 0;
         for i in range(n):
             j += 1
-            stimulus.append( h.IClamp(0.5, sec=self.cell.soma) )
+        #    stimulus.append( h.IClamp(0.5, sec=self.cell.soma) )
             stimulus[i].amp = current_parameters["current"+str(j)]["amp"]
             stimulus[i].dur = current_parameters["current"+str(j)]["dur"]
             stimulus[i].delay = current_parameters["current"+str(j)]["delay"]
