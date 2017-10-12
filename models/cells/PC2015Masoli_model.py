@@ -282,26 +282,29 @@ class PurkinjeCell( sciunit.Model,
 
     # +++++++++++++++++++++set_stimulation_properties++++++++++++++++++++
     # created:  01 September 2017
-    # modified: 
+    # modified: 10 October 2017
     # Note: This function is NOT model capability function.
     #       This function takes four arguments:
     #       time_step = 
     #       temp =
     #       t_final =
     #       v_init =
+    #       ****IMPORTANT*****
+    #       With NEURON stimulus setup as a seperate python function it
+    #       requires that the returned stimulus is RE-set to the cell.soma
+    #       This is why the function returns the list of stimuli
     # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     def set_stimulation_properties( self, current_parameters ):
-        #stimulus = []
-        stimulus = [ h.IClamp(0.5, sec=self.cell.soma) ]
+        stimulus = [] # list of stimuli
         n = len(current_parameters) # number of currents
         # =============first create 'n' IClamps
-        j = 0;
         for i in range(n):
-            j += 1
-        #    stimulus.append( h.IClamp(0.5, sec=self.cell.soma) )
-            stimulus[i].amp = current_parameters["current"+str(j)]["amp"]
-            stimulus[i].dur = current_parameters["current"+str(j)]["dur"]
-            stimulus[i].delay = current_parameters["current"+str(j)]["delay"]
+            # IClamp for each stimulus
+            stimulus.append( h.IClamp(0.5, sec=self.cell.soma) )
+            stimulus[i].amp = current_parameters["current"+str(i+1)]["amp"]
+            stimulus[i].dur = current_parameters["current"+str(i+1)]["dur"]
+            stimulus[i].delay = current_parameters["current"+str(i+1)]["delay"]
+        return stimulus
     
 #
 # ==========================================================================
