@@ -295,16 +295,19 @@ class PurkinjeCell( sciunit.Model,
     #       This is why the function returns the list of stimuli
     # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     def set_stimulation_properties( self, current_parameters ):
-        stimulus = [] # list of stimuli
+        list_of_stimuli = []
         n = len(current_parameters) # number of currents
         # =============first create 'n' IClamps
         for i in range(n):
             # IClamp for each stimulus
-            stimulus.append( h.IClamp(0.5, sec=self.cell.soma) )
-            stimulus[i].amp = current_parameters["current"+str(i+1)]["amp"]
-            stimulus[i].dur = current_parameters["current"+str(i+1)]["dur"]
-            stimulus[i].delay = current_parameters["current"+str(i+1)]["delay"]
-        return stimulus
+            list_of_stimuli.append( h.IClamp(0.5, sec=self.cell.soma) )
+            list_of_stimuli[i].amp = \
+                    current_parameters["current"+str(i+1)]["amp"]
+            list_of_stimuli[i].dur = \
+                    current_parameters["current"+str(i+1)]["dur"]
+            list_of_stimuli[i].delay = \
+                    current_parameters["current"+str(i+1)]["delay"]
+        return list_of_stimuli
     
 #
 # ==========================================================================
