@@ -45,7 +45,7 @@ def get_available_models(model_scale=None):
     modelling scale.
     """
     root_path = os.getcwd()
-    model_path = root_path + os.sep + "model" + os.sep + model_scale
+    model_path = root_path + os.sep + "models" + os.sep + model_scale
     os.chdir(model_path) # change pwd path to model_path
     model_directories = \
             [item for item in os.listdir(os.getcwd()) if os.path.isdir(item)]
