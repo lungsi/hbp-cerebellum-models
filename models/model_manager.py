@@ -44,8 +44,8 @@ def get_available_models(model_scale=None):
     Function gives you the list of available models for the chosen
     modelling scale.
     """
-    root_path = os.getcwd()
-    model_path = root_path + os.sep + "models" + os.sep + model_scale
+    root_path = os.getcwd() + os.sep
+    model_path = root_path +  "models" + os.sep + model_scale
     os.chdir(model_path) # change pwd path to model_path
     model_directories = \
             [item for item in os.listdir(os.getcwd()) if os.path.isdir(item)]
