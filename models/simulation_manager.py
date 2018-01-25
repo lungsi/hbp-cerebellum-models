@@ -171,7 +171,28 @@ def build_nwbfile( file_meta_data ):
     return file_to_write
 
 
-
+def construct_nwbepochs( nwbfile, epoch_meta_data ):
+    """
+    Use case:
+    epoch_meta_data = { "epoch1": {"source": "where is this from?",
+                                   "start": float, "stop": float,
+                                   "description": "first epoch"},
+                        "epoch2": {"source": "where is this from?",
+                                   "start": float, "stop": float,
+                                   "description": "second epoch"} }
+    nwbfile, epoch_list = construct_nwbepochs( nwbfile, epoch_meta_data )
+    """
+    epoch_tags = ( nwbfile.identifier + "_epochs", )
+    nwb_epochs_list = []
+    for key in epoch_meta_data.keys():
+        nwb_epochs_list.append(
+                nwbfile.create_epoch ( name = key,
+                                       source = epoch_meta_data[key]["source"],
+                                       start = epoch_meta_data[key]["start"],
+                                       stop = epoch_meta_data[key]["stop"],
+                                       tags = epoch_tags,
+                                       description = epoch_meta_data[key]["description" ) )
+    return nwbfile, nwb_epochs_list
 
 #
 #
