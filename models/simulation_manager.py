@@ -50,6 +50,7 @@ from pynwb import NWBFile
 import pynwb
 import pkg_resources
 from pynwb.icephys import CurrentClampSeries, CurrentClampStimulusSeries
+from pynwb.icephys import VoltageClampSeries, VoltageClampStimulusSeries
 from pynwb import get_manager
 from pynwb.form.backends.hdf5 import HDF5IO
 
@@ -223,5 +224,88 @@ def construct_nwb_icelectrode( nwbfile, electrode_meta_data ):
                     initial_access_resistance = electrode_meta_data["initial_access_resistance"],
                     device = electrode_meta_data["device"] )
     return nwbfile, clamped_electrode
+
+
+def construct_nwb_timeseries_obj( ts_meta_data, clamped_electrode ):
+    """
+    Use case:
+    voltage_meta_data = { "type": "CurrentClampSeries",
+                          "source": "Who is this from?",
+                          "data": model.predictions["voltage_response"]["vm_soma"],
+                          "gain": 0.0,
+                          "bias_current": 0.0,
+                          "bridge_balance": 0.0,
+                          "capacitance_compensation": 0.0,
+                          "resolution": dt,
+                          "conversion": 1000.0,
+                          "timestamps": np.array( getattr( model.cell, "rec_t" ) ),
+                          "starting_time": 0.0,
+                          "rate": 1/dt,
+                          "comment": "voltage response to current injection",
+                          "description": "voltage response from the soma" }
+
+    injection_meta_data = { "type": "CurrentClampStimulusSeries",
+                          "source": "Who is this from?",
+                          "data": model.predictions["voltage_response"]["vm_soma"],
+                          "unit": "milliAmp",
+                          "gain": 0.0,
+                          "resolution": dt,
+                          "conversion": 10.0**6,
+                          "timestamps": np.array( getattr( model.cell, "rec_t" ) ),
+                          "starting_time": 0.0,
+                          "rate": 1/dt,
+                          "comment": "soma current injection",
+                          "description": "IClamp into soma" }
+    tseries_vresponse = construct_nwb_timeseries_obj( voltage_meta_data,
+                                                      clamped_electrode )
+    tseries_currentinj = construct_nwb_timeseries_obj( injection_meta_data,
+                                                       clamped_electrode )
+    """
+    ts_type = ts_meta_data["type"]
+    if ts_type == "CurrentClampSeries":
+        ts_object = \
+            CurrentClampSeries(
+                name = "voltage_response",
+                source = ts_meta_data["source"],
+                data = ts_meta_data["data"],
+                unit = "milliVolt",
+                electrode = clamped_electrode,
+                gain = ts_meta_data["gain"],
+                bias_current = ts_meta_data["bias_current"],
+                bridge_balance = ts_meta_data["bridge_balance"],
+                capacitance_compensation = ts_meta_data["capacitance_compensation"],
+                resolution = ts_meta_data["resolution"],
+                conversion = ts_meta_data["conversion"],
+                timestamps = ts_meta_data["timestamps"],
+                starting_time = ts_meta_data["starting_time"],
+                rate = ts_meta_data["rate"],
+                comment = ts_meta_data["comment"],
+                description = ts_meta_data["description"] )
+    #
+    elif ts_type == "CurrentClampStimulusSeries":
+        ts_object = \
+            CurrentClampStimulusSeries(
+                name = "",
+                source = ts_meta_data["source"],
+                data = ts_meta_data["data"],
+                unit = ts_meta_data["unit"],
+                electrode = clamped_electrode,
+                gain = ts_meta_data["gain"],
+                resolution = ts_meta_data["resolution"],
+                conversion = ts_meta_data["conversion"],
+                timestamps = ts_meta_data["timestamps"],
+                starting_time = ts_meta_data["starting_time"],
+                rate =  ts_meta_data["rate"],
+                comment = ts_meta_data["comment"],
+                description = ts_meta_data["description"] )
+    #
+    elif ts_type == "VoltageClampSeries":
+        # to be filled
+        #ts_object = VoltageClampSeries()
+    elif ts_type == "VoltageClampStimulusSeries":
+        # to be filled
+        #ts_object = VoltageClampStimulusSeries()
+    #
+    return ts_object  
 #
 #
