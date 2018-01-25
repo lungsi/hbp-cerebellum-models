@@ -194,5 +194,34 @@ def construct_nwbepochs( nwbfile, epoch_meta_data ):
                                        description = epoch_meta_data[key]["description" ) )
     return nwbfile, nwb_epochs_list
 
+
+def construct_nwb_icelectrode( nwbfile, electrode_meta_data ):
+    """
+    Use case:
+    electrode_meta_data = { "name": "name of the electrode or use IClamp or IRamp",
+                            "source": "which electrode of the clamp?",
+                            "slice": "slice size of the tissue",
+                            "seal": "seal used for recording or no seal",
+                            "description": "describe recording or electrode, for eg., whole-cell, sharp, etc."
+                            "location": "area, layer, stereotaxis coordinate or just choose one: soma, denrite, axon, etc.",
+                            "resistance": "amount of resistance in the electrode (unit is Ohm)",
+                            "filtering": "eg., 2.2Hz Bessel filter function",
+                            "initial_access_resistance": "eg. nil",
+                            "device": "device name" }
+    nwbfile, clamped_electrode = construct_nwb_icelectrode( nwbfile, electrode_meta_data )
+    """
+    clamped_electrode = \
+            nwbfile.create_intracellular_electrode(
+                    name = electrode_meta_data["name"],
+                    source = electrode_meta_data["source"],
+                    slice = electrode_meta_data["slice"],
+                    seal = electrode_meta_data["seal"],
+                    description = electrode_meta_data["description"],
+                    location = electrode_meta_data["location"],
+                    resistance = electrode_meta_data["resistance"],
+                    filtering = electrode_meta_data["filtering"],
+                    initial_access_resistance = electrode_meta_data["initial_access_resistance"],
+                    device = electrode_meta_data["device"] )
+    return nwbfile, clamped_electrode
 #
 #
