@@ -45,6 +45,13 @@ import time
 
 from neuron import h
 import numpy as np
+from datetime import datetime
+from pynwb import NWBFile
+import pynwb
+import pkg_resources
+from pynwb.icephys import CurrentClampSeries, CurrentClampStimulusSeries
+from pynwb import get_manager
+from pynwb.form.backends.hdf5 import HDF5IO
 
 
 def discover_cores_activate_multisplit(h):
@@ -134,6 +141,37 @@ def save_predictions(model, response_type, dir_path):
         for cell_region, with_thresh in model.cell_regions.iteritems():
             spikes = model.predictions[response_type][cell_region]
             np.savetxt( dir_path + "spikes_" + cell_region + ".txt", spikes )
+
+
+def build_nwbfile( file_meta_data ):
+    """
+    Use case:
+    file_meta_data = { "source": "Where is the data from?",
+                       "session_description": "How was the data generated?",
+                       "identifier": "a unique ID",
+                       "session_start_time": str(time when recording began),
+                       "experimenter": "name of the experimenter",
+                       "experiment_description": "described experiment",
+                       "session_id": "collab ID",
+                       "institution": "name of the institution",
+                       "lab": "name of the lab" }
+    file_to_write = build_nwbfile( file_metadata )
+    """
+    file_to_write = NWBFile( source = file_meta_data["source"],
+                             session_description = file_meta_data["session_description"],
+                             identifier = file_meta_data["identifier"],
+                             session_start_time = file_meta_data["session_start_time"],
+                             file_create_date = str(datetime.now()),
+                             version = str(pkg_resources.get_distribution("pynwb").version),
+                             experimenter = file_meta_data["experimenter"],
+                             experiment_description = file_meta_data["experiment_description"],
+                             session_id = file_meta_data["session_id"],
+                             institution = file_meta_data["institution"],
+                             lab = file_meta_data["lab"] )
+    return file_to_write
+
+
+
 
 #
 #

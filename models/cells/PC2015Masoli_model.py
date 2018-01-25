@@ -294,19 +294,36 @@ class PurkinjeCell( sciunit.Model,
     #       requires that the returned stimulus is RE-set to the cell.soma
     #       This is why the function returns the list of stimuli
     # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    def set_stimulation_properties( self, current_parameters ):
+    def set_stimulation_properties( self, current_parameters, stim_type="IClamp" ):
         list_of_stimuli = []
         n = len(current_parameters) # number of currents
         # =============first create 'n' IClamps
         for i in range(n):
-            # IClamp for each stimulus
-            list_of_stimuli.append( h.IClamp(0.5, sec=self.cell.soma) )
-            list_of_stimuli[i].amp = \
+            key = "current"+str(i+1)
+            if stim_type=="IClamp":
+                # IClamp for each stimulus
+                list_of_stimuli.append( h.IClamp(0.5, sec=self.cell.soma) )
+                list_of_stimuli[i].amp = \
                     current_parameters["current"+str(i+1)]["amp"]
-            list_of_stimuli[i].dur = \
+                list_of_stimuli[i].dur = \
                     current_parameters["current"+str(i+1)]["dur"]
-            list_of_stimuli[i].delay = \
+                list_of_stimuli[i].delay = \
                     current_parameters["current"+str(i+1)]["delay"]
+            elif stim_type=="IRamp":
+                list_of_stimuli.append( h.IRamp(0.5, sec=self.cell.soma) )
+                list_of_stimuli[i].delay = \
+                    current_parameters[key]["delay"]
+                list_of_stimuli[i].dur = \
+                    current_parameters[key]["dur"]
+                list_of_stimuli[i].amp_initial = \
+                    current_parameters[key]["amp_initial"]
+                if i==0:
+                    list_of_simuli[i].amp_final = \
+                        current_parameters[key]["amp_final"]
+                else:
+                    list_of_stimuli[i].amp_final = \
+                        current_parameters[key]["amp_final"] \
+                        - current_parameters[key]["amp_initial"]
         return list_of_stimuli
     
 #
