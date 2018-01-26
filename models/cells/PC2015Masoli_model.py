@@ -335,5 +335,12 @@ class PurkinjeCell( sciunit.Model,
             self.cur_inj.update( {key: h.Vector()} )
             self.cur_inj[key].record( list_of_stimuli[i]._ref_i )
 
+
+    def collect_recorded_stimulus_vector(self, list_of_stimuli ):
+        n = len(list_of_stimuli) # number of currents
+        for i in range(n-1):
+            j = i+1
+            key = "stim"+str(j)
+            self.cur_inj["stim0"].add( self.cur_inj[key] )
 #
 # ==========================================================================
