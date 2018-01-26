@@ -231,7 +231,7 @@ def construct_nwb_timeseries_obj( ts_meta_data, clamped_electrode ):
     Use case:
     voltage_meta_data = { "type": "CurrentClampSeries",
                           "source": "Who is this from?",
-                          "data": model.predictions["voltage_response"]["vm_soma"],
+                          "data": np.array( getattr( model.cell, "vm_soma" ) ),
                           "gain": 0.0,
                           "bias_current": 0.0,
                           "bridge_balance": 0.0,
@@ -246,7 +246,7 @@ def construct_nwb_timeseries_obj( ts_meta_data, clamped_electrode ):
 
     injection_meta_data = { "type": "CurrentClampStimulusSeries",
                           "source": "Who is this from?",
-                          "data": model.predictions["voltage_response"]["vm_soma"],
+                          "data": model.predictions["vo,
                           "unit": "milliAmp",
                           "gain": 0.0,
                           "resolution": dt,

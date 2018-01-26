@@ -156,7 +156,7 @@ class PurkinjeCell( sciunit.Model,
         #self.spikes_from_all_regions = {}
         getspikes( self ) # this also attaches the predictions
         # ====save the prediction into a text file
-        sp(self, "spike_train", self.prediction_dir_path)
+        #sp(self, "spike_train", self.prediction_dir_path)
         # ===============================================================
         print " Done!"
 
@@ -325,6 +325,15 @@ class PurkinjeCell( sciunit.Model,
                         current_parameters[key]["amp_final"] \
                         - current_parameters[key]["amp_initial"]
         return list_of_stimuli
-    
+
+
+    def create_stimulus_vector_for_record( self, list_of_stimuli ):
+        self.cur_inj = {} # this is where the stimulus trace will be stored
+        n = len(list_of_stimuli) # number of currents
+        for i in range(n):
+            key = "stim" + str(i)
+            self.cur_inj.update( {key: h.Vector()} )
+            self.cur_inj[key].record( list_of_stimuli[i]._ref_i )
+
 #
 # ==========================================================================
