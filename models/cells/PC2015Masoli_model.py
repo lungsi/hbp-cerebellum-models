@@ -369,7 +369,13 @@ class PurkinjeCell( sciunit.Model,
             self.cur_inj["stim0"].add( self.cur_inj[key] )
 
 
-   def beget_nwb_metadata(self, what):
-   
+    def beget_nwb_metadata(self, what):
+        meta_data = {}
+        for x in what:
+            if x == "epoch":
+                a_dict = { "source": ,
+                           "start": ,
+                           "stop": ,
+                           "decription": }
 #
 # ==========================================================================
