@@ -99,8 +99,8 @@ def check_capability_availability(capability_name="None",
 
 
 # created  18 August 2016 Lungsi
-# modified 22 September 2017 Lungsi
-def save_predictions(model, response_type, dir_path):
+# modified 26 January 2018 Lungsi (0.2.0dev)
+def save_predictions(nwbfile_details):
     """
     Use case: save_predictions(model, response_type, model.prediction_dir_pat)
     where model = self and therefore
@@ -115,54 +115,46 @@ def save_predictions(model, response_type, dir_path):
     """
     dir_path = dir_path + os.sep
     #
-    if response_type=="voltage_response":
-        # create a container for storing/attaching the voltage responses
-        # to the model
-        model.predictions.update( { response_type: {} } )
-        # get the times associated with each voltage response
-        time = np.array( getattr( model.cell, "rec_t") )
-        # loop through each cell region to save the prediction into
-        # a .txt file and also attach the prediction into the model
-        for cell_region, with_thresh in model.cell_regions.iteritems():
-            # create an array of time and voltage responses
-            t_vm_array = \
-                    np.column_stack( ( time,
-                                       np.array( getattr( model.cell,
-                                                          cell_region ) )
-                                        ) )
-            # save the a_prediction into a .txt file
-            np.savetxt( dir_path + cell_region + ".txt",
-                        t_vm_array,
-                        delimiter = ' ' )
-            # attach the a_prediction to the model
-            a_prediction = {cell_region: t_vm_array}
-            model.predictions[response_type].update(a_prediction)
-            #
-    elif response_type=="spike_train":
-        for cell_region, with_thresh in model.cell_regions.iteritems():
-            spikes = model.predictions[response_type][cell_region]
-            np.savetxt( dir_path + "spikes_" + cell_region + ".txt", spikes )
-    #
     nwbfile_to_write = build_nwbfile( nwbfile_details["file_meta_data"] )
     # create epochs and update the file with epoch
-    nwbfile_to_write, nwb_epoch_list = \
-        construct_nwbepochs( nwbfile_to_write,
-                             nwbfile_details["epoch_meta_data" )
-    # update the file and create electrode/group
-    nwbfile_to_write, clamped_electrode = \
-        construct_nwb_icelectrode( nwbfile_to_write,
-                                   nwbfile_details["electrode_meta_data"] )
-    # create timeseries NWB object
-    ts_nwb_object = \
-        construct_nwb_timeseries_obj( nwbfile_details["ts_meta_data"],
+    epoch_electrodes_all_responses = {}
+    for key in nwbfile_details["responses"].keys():
+        if key == "response"+str(i):
+            # create epoch and update the created nwbfile
+            epoch_meta_data = \
+                nwbfile_details["responses"][key]["epoch_meta_data"]
+            nwbfile_to_write, nwb_epoch_list = \
+                construct_nwbepochs( nwbfile_to_write, epoch_meta_data )
+            # create electrode and update the nwbfile
+            electrode_meta_data = \
+                nwbfile_details["responses"][key]["electrode_meta_data"]
+            nwbfile_to_write, nwb_clamped_electrode = \
+                construct_nwb_icelectrode( nwbfile_to_write,
+                                           electrode_meta_data )
+            # create timeseries NWB object
+            ts_meta_data = \
+                nwbfile_details["responses"][key]["ts_meta_data"]
+            ts_nwb_object = \
+                construct_nwb_timeseries_obj( ts_meta_data,
+                                              nwb_clamped_electrode)
+            # add the timeseries response to the file
+            nwbfile_to_write.add_acquisition( ts_nwb_object,
+                                              nwb_epoch_list )
+            epoch_electrodes_all_responses.update(
+                { key: {epoch_list: nwb_epoch_list,
+                        clamped_electrode: nwb_clamped_electrode} } )
+    # create Stimulus timeseries NWB object
+    stimulus_ts_meta_data = nwbfile_details["stimulus"]["ts_meta_data"]
+    clamped_electrode = \
+        epoch_electrodes_all_responses["response1"]["clamped_electrode"]
+    stimulus_ts_nwb_object = \
+        construct_nwb_timeseries_obj( stimulus_ts_meta_data,
                                       clamped_electrode )
-    #
-    if signal_type=="stimulus":
-        nwbfile_to_write.add_stimulus( ts_nwb_object )
-    else:
-        nwbfile_to_write.add_acquisition( ts_nwb_object, nwb_epoch_list )
-    #
-    io = HDF5IO( dir_path + filename, manager=get_manager(), mode="w" )
+    # add the timeseries stimulus to the file
+    nwbfile_to_write.add_stimulus(stimulus_ts_nwb_object)
+    # write the nwbfile to a .h5 file in a chosen path
+    io = HDF5IO( nwbfile_details["filename_w_dirpath"],
+                 manager=get_manager(), mode="w" )
     io.write( nwbfile_to_write )
     io.close()
 
