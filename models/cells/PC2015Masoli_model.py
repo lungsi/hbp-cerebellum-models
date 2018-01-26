@@ -327,6 +327,18 @@ class PurkinjeCell( sciunit.Model,
         return list_of_stimuli
 
 
+    # +++++++++++++++++++create_stimulus_vector_for_recor++++++++++++++++
+    # created:  25 January 2018 (part of 0.2.0dev)
+    # modified: 
+    # Note: This function is NOT model capability function.
+    #       This function creates a dictionary of n number of stimuli.
+    #       Each key is given by "stim"+n; thus first key is "stim0".
+    #       Value for each key is a NEURON vector.
+    #       Within each vector is the recorded NEURON stimuli
+    #       ****IMPORTANT*****
+    #       The dictionary is an attribute of the model.
+    #       If model = PC2015Masoli(), then model.cur_inj is the dictionary
+    # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     def create_stimulus_vector_for_record( self, list_of_stimuli ):
         self.cur_inj = {} # this is where the stimulus trace will be stored
         n = len(list_of_stimuli) # number of currents
@@ -336,6 +348,19 @@ class PurkinjeCell( sciunit.Model,
             self.cur_inj[key].record( list_of_stimuli[i]._ref_i )
 
 
+    # +++++++++++++++++collect_recorded_stimulus_vector+++++++++++++++++
+    # created:  26 January 2018 (part of 0.2.0dev)
+    # modified: 
+    # Note: This function is NOT model capability function.
+    #       Because the cur_inj attribute (i.e, model.cur_inj) dictionary
+    #       contains the recorded NEURON stimuli vectors separately as
+    #       values for each key in the dictionary, they must be put in one.
+    #       This function does it by putting them all in as the value for
+    #       the key "stim0". That is model.cur_inj["stim0"]
+    #       >>>TIP
+    #       You can get the all the recorded stimulus values by
+    #       getattr( model, "cur_inj" )["stim0"]
+    # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     def collect_recorded_stimulus_vector(self, list_of_stimuli ):
         n = len(list_of_stimuli) # number of currents
         for i in range(n-1):
