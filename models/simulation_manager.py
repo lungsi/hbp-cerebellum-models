@@ -118,21 +118,18 @@ def save_predictions(nwbfile_details):
     nwbfile_to_write = build_nwbfile( nwbfile_details["file_meta_data"] )
     # create epochs and update the file with epoch
     epoch_electrodes_all_responses = {}
-    for key in nwbfile_details["responses"].keys():
+    for key, value in nwbfile_details["responses"].iteritems():
         # create epoch and update the created nwbfile
-        epoch_meta_data = \
-            nwbfile_details["responses"][key]["epoch_meta_data"]
+        epoch_meta_data = value["epoch_meta_data"]
         nwbfile_to_write, nwb_epoch_list = \
             construct_nwbepochs( nwbfile_to_write, epoch_meta_data )
         # create electrode and update the nwbfile
-        electrode_meta_data = \
-            nwbfile_details["responses"][key]["electrode_meta_data"]
+        electrode_meta_data = value["electrode_meta_data"]
         nwbfile_to_write, nwb_clamped_electrode = \
             construct_nwb_icelectrode( nwbfile_to_write,
                                        electrode_meta_data )
         # create timeseries NWB object
-        ts_meta_data = \
-            nwbfile_details["responses"][key]["ts_meta_data"]
+        ts_meta_data = value["ts_meta_data"]
         ts_nwb_object = \
             construct_nwb_timeseries_obj( ts_meta_data,
                                           nwb_clamped_electrode)

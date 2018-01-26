@@ -367,5 +367,9 @@ class PurkinjeCell( sciunit.Model,
             j = i+1
             key = "stim"+str(j)
             self.cur_inj["stim0"].add( self.cur_inj[key] )
+
+
+   def beget_nwb_metadata(self, what):
+   
 #
 # ==========================================================================
