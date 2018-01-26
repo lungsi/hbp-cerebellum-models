@@ -142,6 +142,29 @@ def save_predictions(model, response_type, dir_path):
         for cell_region, with_thresh in model.cell_regions.iteritems():
             spikes = model.predictions[response_type][cell_region]
             np.savetxt( dir_path + "spikes_" + cell_region + ".txt", spikes )
+    #
+    nwbfile_to_write = build_nwbfile( nwbfile_details["file_meta_data"] )
+    # create epochs and update the file with epoch
+    nwbfile_to_write, nwb_epoch_list = \
+        construct_nwbepochs( nwbfile_to_write,
+                             nwbfile_details["epoch_meta_data" )
+    # update the file and create electrode/group
+    nwbfile_to_write, clamped_electrode = \
+        construct_nwb_icelectrode( nwbfile_to_write,
+                                   nwbfile_details["electrode_meta_data"] )
+    # create timeseries NWB object
+    ts_nwb_object = \
+        construct_nwb_timeseries_obj( nwbfile_details["ts_meta_data"],
+                                      clamped_electrode )
+    #
+    if signal_type=="stimulus":
+        nwbfile_to_write.add_stimulus( ts_nwb_object )
+    else:
+        nwbfile_to_write.add_acquisition( ts_nwb_object, nwb_epoch_list )
+    #
+    io = HDF5IO( dir_path + filename, manager=get_manager(), mode="w" )
+    io.write( nwbfile_to_write )
+    io.close()
 
 
 def build_nwbfile( file_meta_data ):
@@ -180,19 +203,21 @@ def construct_nwbepochs( nwbfile, epoch_meta_data ):
                                    "description": "first epoch"},
                         "epoch2": {"source": "where is this from?",
                                    "start": float, "stop": float,
-                                   "description": "second epoch"} }
+                                   "description": "second epoch"}
+                        "epoch_tags": ("responseN_epochs",) }
     nwbfile, epoch_list = construct_nwbepochs( nwbfile, epoch_meta_data )
     """
-    epoch_tags = ( nwbfile.identifier + "_epochs", )
+    meta_wo_tags = { x: epoch_meta_data[x] for x in epoch_meta_data
+                                           if x not in {"epoch_tags"} }
     nwb_epochs_list = []
-    for key in epoch_meta_data.keys():
+    for key in meta_wo_tags.keys():
         nwb_epochs_list.append(
                 nwbfile.create_epoch ( name = key,
-                                       source = epoch_meta_data[key]["source"],
-                                       start = epoch_meta_data[key]["start"],
-                                       stop = epoch_meta_data[key]["stop"],
-                                       tags = epoch_tags,
-                                       description = epoch_meta_data[key]["description" ) )
+                                       source = meta_wo_tags[key]["source"],
+                                       start = meta_wo_tags[key]["start"],
+                                       stop = meta_wo_tags[key]["stop"],
+                                       tags = epoch_meta_data["epoch_tags"],
+                                       description = meta_wo_tags[key]["description" ) )
     return nwbfile, nwb_epochs_list
 
 
