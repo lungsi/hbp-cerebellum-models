@@ -119,30 +119,29 @@ def save_predictions(nwbfile_details):
     # create epochs and update the file with epoch
     epoch_electrodes_all_responses = {}
     for key in nwbfile_details["responses"].keys():
-        if key == "response"+str(i):
-            # create epoch and update the created nwbfile
-            epoch_meta_data = \
-                nwbfile_details["responses"][key]["epoch_meta_data"]
-            nwbfile_to_write, nwb_epoch_list = \
-                construct_nwbepochs( nwbfile_to_write, epoch_meta_data )
-            # create electrode and update the nwbfile
-            electrode_meta_data = \
-                nwbfile_details["responses"][key]["electrode_meta_data"]
-            nwbfile_to_write, nwb_clamped_electrode = \
-                construct_nwb_icelectrode( nwbfile_to_write,
-                                           electrode_meta_data )
-            # create timeseries NWB object
-            ts_meta_data = \
-                nwbfile_details["responses"][key]["ts_meta_data"]
-            ts_nwb_object = \
-                construct_nwb_timeseries_obj( ts_meta_data,
-                                              nwb_clamped_electrode)
-            # add the timeseries response to the file
-            nwbfile_to_write.add_acquisition( ts_nwb_object,
-                                              nwb_epoch_list )
-            epoch_electrodes_all_responses.update(
-                { key: {epoch_list: nwb_epoch_list,
-                        clamped_electrode: nwb_clamped_electrode} } )
+        # create epoch and update the created nwbfile
+        epoch_meta_data = \
+            nwbfile_details["responses"][key]["epoch_meta_data"]
+        nwbfile_to_write, nwb_epoch_list = \
+            construct_nwbepochs( nwbfile_to_write, epoch_meta_data )
+        # create electrode and update the nwbfile
+        electrode_meta_data = \
+            nwbfile_details["responses"][key]["electrode_meta_data"]
+        nwbfile_to_write, nwb_clamped_electrode = \
+            construct_nwb_icelectrode( nwbfile_to_write,
+                                       electrode_meta_data )
+        # create timeseries NWB object
+        ts_meta_data = \
+            nwbfile_details["responses"][key]["ts_meta_data"]
+        ts_nwb_object = \
+            construct_nwb_timeseries_obj( ts_meta_data,
+                                          nwb_clamped_electrode)
+        # add the timeseries response to the file
+        nwbfile_to_write.add_acquisition( ts_nwb_object,
+                                          nwb_epoch_list )
+        epoch_electrodes_all_responses.update(
+            { key: {epoch_list: nwb_epoch_list,
+                    clamped_electrode: nwb_clamped_electrode} } )
     # create Stimulus timeseries NWB object
     stimulus_ts_meta_data = nwbfile_details["stimulus"]["ts_meta_data"]
     clamped_electrode = \
@@ -282,7 +281,7 @@ def construct_nwb_timeseries_obj( ts_meta_data, clamped_electrode ):
     if ts_type == "CurrentClampSeries":
         ts_object = \
             CurrentClampSeries(
-                name = "voltage_response",
+                name = ts_meta_data["name"],
                 source = ts_meta_data["source"],
                 data = ts_meta_data["data"],
                 unit = "milliVolt",
@@ -302,7 +301,7 @@ def construct_nwb_timeseries_obj( ts_meta_data, clamped_electrode ):
     elif ts_type == "CurrentClampStimulusSeries":
         ts_object = \
             CurrentClampStimulusSeries(
-                name = "",
+                name = ts_meta_data["name"],
                 source = ts_meta_data["source"],
                 data = ts_meta_data["data"],
                 unit = ts_meta_data["unit"],
