@@ -308,6 +308,16 @@ class PurkinjeCell( sciunit.Model,
             list_of_stimuli[i].delay = \
                     current_parameters["current"+str(i+1)]["delay"]
         return list_of_stimuli
+      
+    # +++++++++++++++++++++++++++++reset++++++++++++++++++++++++++++++++
+    # created:  29 January 2018
+    # modified: 
+    # Note: This function resets the model template.
+    #       by re-instantiating self.cell = Purkinje()
+    # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    def reset( self ):
+        self.cell = Purkinje()
+      
     
 #
 # ==========================================================================
