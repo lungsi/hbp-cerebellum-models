@@ -121,7 +121,7 @@ class PurkinjeCell( sciunit.Model,
         self.prediction_dir_path = cmdir( "model-predictions",
                                            self.model_scale,
                                            self.model_name )
-        self.prediction_file_names = [] # keeps file names
+        self.predicted_files_full_path = [] # keeps file names
         # =====specify cell_regions from which you want predictions======
         # created 22 Sept 2017
         self.cell_regions = {"vm_soma": 0.0, "vm_NOR3": 0.0}
@@ -315,13 +315,11 @@ class PurkinjeCell( sciunit.Model,
     # +++++++++++++++++++++++++++++reset++++++++++++++++++++++++++++++++
     # created:  29 January 2018
     # modified: 
-    # Note: This function resets the model template.
-    #       by re-instantiating self.cell = Purkinje()
+    # Note: This function resets the model by removing any stored data.
     # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     def reset( self ):
-        for i in range(len(self.prediction_file_names)):
-            path_with_file = self.prediction_dir_path + os.sep + self.prediction_file_names[i]
-            os.remove(path_with_file)
+        for i in range(len(self.predicted_files_full_path)):
+            os.remove(self.predicted_files_full_path[i])
       
     
 #
