@@ -135,7 +135,7 @@ def save_predictions(model, response_type, dir_path):
             file_name_full_path = dir_path + "spikes_" + cell_region + ".txt"
             np.savetxt( file_name_full_path, spikes )
     # save the file_name for possible reset
-    model.prediction_file_names.append(file_name_full_path)
+    model.predicted_files_full_path.append(file_name_full_path)
 
 #
 #
