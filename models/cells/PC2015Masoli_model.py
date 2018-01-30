@@ -321,7 +321,7 @@ class PurkinjeCell( sciunit.Model,
         for i in range(len(self.predicted_files_full_path)):
             os.remove(self.predicted_files_full_path[i])
         self.predictions = {}
-      
+        h.finitialize()
     
 #
 # ==========================================================================
