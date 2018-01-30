@@ -123,9 +123,8 @@ def save_predictions(model, response_type, dir_path):
                                                           cell_region ) )
                                         ) )
             # save the a_prediction into a .txt file
-            np.savetxt( dir_path + cell_region + ".txt",
-                        t_vm_array,
-                        delimiter = ' ' )
+            file_name = dir_path + cell_region + ".txt"
+            np.savetxt( file_name, t_vm_array, delimiter = ' ' )
             # attach the a_prediction to the model
             a_prediction = {cell_region: t_vm_array}
             model.predictions[response_type].update(a_prediction)
@@ -133,7 +132,10 @@ def save_predictions(model, response_type, dir_path):
     elif response_type=="spike_train":
         for cell_region, with_thresh in model.cell_regions.iteritems():
             spikes = model.predictions[response_type][cell_region]
-            np.savetxt( dir_path + "spikes_" + cell_region + ".txt", spikes )
+            file_name = dir_path + "spikes_" + cell_region + ".txt"
+            np.savetxt( file_name, spikes )
+    # save the file_name for possible reset
+    model.prediction_file_names.append(file_name)
 
 #
 #
