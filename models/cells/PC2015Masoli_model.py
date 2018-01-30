@@ -320,6 +320,7 @@ class PurkinjeCell( sciunit.Model,
     def reset( self ):
         for i in range(len(self.predicted_files_full_path)):
             os.remove(self.predicted_files_full_path[i])
+        self.predictions = {}
       
     
 #
