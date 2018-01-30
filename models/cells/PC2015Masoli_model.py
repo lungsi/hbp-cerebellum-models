@@ -121,6 +121,7 @@ class PurkinjeCell( sciunit.Model,
         self.prediction_dir_path = cmdir( "model-predictions",
                                            self.model_scale,
                                            self.model_name )
+        self.prediction_file_names = [] # keeps file names
         # =====specify cell_regions from which you want predictions======
         # created 22 Sept 2017
         self.cell_regions = {"vm_soma": 0.0, "vm_NOR3": 0.0}
@@ -318,8 +319,9 @@ class PurkinjeCell( sciunit.Model,
     #       by re-instantiating self.cell = Purkinje()
     # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     def reset( self ):
-        #self.cell = Purkinje()
-        self.predictions = {}
+        for i in range(len(self.prediction_file_names)):
+            path_with_file = self.prediction_dir_path + os.sep + self.prediction_file_names[i]
+            os.remove(path_with_file)
       
     
 #
