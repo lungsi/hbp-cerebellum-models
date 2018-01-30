@@ -318,7 +318,8 @@ class PurkinjeCell( sciunit.Model,
     #       by re-instantiating self.cell = Purkinje()
     # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     def reset( self ):
-        self.cell = Purkinje()
+        #self.cell = Purkinje()
+        self.predictions = {}
       
     
 #
