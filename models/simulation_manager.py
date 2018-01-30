@@ -129,13 +129,18 @@ def save_predictions(model, response_type, dir_path):
             a_prediction = {cell_region: t_vm_array}
             model.predictions[response_type].update(a_prediction)
             #
+            model.predicted_files_full_path.append(file_name_full_path)
+            #
     elif response_type=="spike_train":
         for cell_region, with_thresh in model.cell_regions.iteritems():
             spikes = model.predictions[response_type][cell_region]
             file_name_full_path = dir_path + "spikes_" + cell_region + ".txt"
             np.savetxt( file_name_full_path, spikes )
+            #
+            model.predicted_files_full_path.append(file_name_full_path)
+            #
     # save the file_name for possible reset
-    model.predicted_files_full_path.append(file_name_full_path)
+    #model.predicted_files_full_path.append(file_name_full_path)
 
 #
 #
