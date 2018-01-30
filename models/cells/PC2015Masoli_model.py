@@ -324,9 +324,9 @@ class PurkinjeCell( sciunit.Model,
         self.cell.rec_t = h.Vector()
         self.cell.rec_t.record(h._ref_t)
         self.cell.vm_soma = h.Vector()
-        self.cell.vm_soma.record(self.soma(0.5)._ref_v)
+        self.cell.vm_soma.record(self.cell.soma(0.5)._ref_v)
         self.cell.vm_NOR3 = h.Vector()
-        self.cell.vm_NOR3.record(self.axonNOR3(0.5)._ref_v)
+        self.cell.vm_NOR3.record(self.cell.axonNOR3(0.5)._ref_v)
     
 #
 # ==========================================================================
