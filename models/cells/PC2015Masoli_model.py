@@ -114,8 +114,13 @@ class PurkinjeCell( sciunit.Model,
         #cwd = os.getcwd()
         #os.chdir(cwd + os.sep + "models" + os.sep + "cells" \
         #           + os.sep + "PC2015Masoli"
-        self.cell = Purkinje()
-        self.reset_cell = copy.deepcopy(self.cell)
+        self.cwd = os.getcwd() # this is the root
+        self.path_to_files = self.cwd + os.sep + "models" + \
+                        os.sep + "cells" + os.sep + \
+                        "PC2015Masoli" + os.sep
+        os.chdir(self.path_to_files) # change to path_to_files
+        self.cell = Purkinje() # self.reset_cell = copy.deepcopy(self.cell)
+        os.chdir(self.cwd)
         #os.chdir(cwd)  # reset to original directory
         #
         # discover no.cores in 1CPU & activate multisplit to use all cores
@@ -364,20 +369,23 @@ class PurkinjeCell( sciunit.Model,
         #    h.cvode.re_init()
         #else:
         #    h.fcurrent()
-        Fixed_step = h.CVode()
-        Fixed_step.active(0) #model doesn't work with variable time-step
+        #Fixed_step = h.CVode()
+        #Fixed_step.active(0) #model doesn't work with variable time-step
         # Make all assigned variables (currents, conductances, etc)
         # consistent with the values of the states.
-        h.fcurrent()
+        #h.fcurrent()
         # Initializes the Vectors which are recording variables.
         # i.e. resize to 0 and append the current values of the variables.
         # This is done at the end of an finitialize() call but needs to be
         # done again to complete initialization if the user changes states or
         # assigned variables that are being recorded.
-        h.frecord_init()
-        h._ref_t[0] = 0.0
-        self.cell.soma(0.5)._ref_v[0] = -65.0
-        self.cell.axonNOR3(0.5)._ref_v[0] = -65.0
+        #h.frecord_init()
+        #h._ref_t[0] = 0.0
+        #self.cell.soma(0.5)._ref_v[0] = -65.0
+        #self.cell.axonNOR3(0.5)._ref_v[0] = -65.0
+        os.chdir(self.path_to_files) # change to path_to_files
+        self.cell = Purkinje() # self.reset_cell = copy.deepcopy(self.cell)
+        os.chdir(self.cwd)
         
     # ----Class method----
     # PurkinjeCell()
