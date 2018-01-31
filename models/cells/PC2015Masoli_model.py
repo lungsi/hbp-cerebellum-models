@@ -333,8 +333,13 @@ class PurkinjeCell( sciunit.Model,
         for i in range(len(self.predicted_files_full_path)):
             os.remove(self.predicted_files_full_path[i])
         self.predictions = {}
-        del self.cell
-        self.cell = self.reset_cell
+        #del self.cell
+        #self.cell = self.reset_cell
+        print h._ref_t
+        print h._ref_t[0]
+        h._ref_t = None
+        print h._ref_t
+        print h._ref_t[0]
         #self.cell.rec_t = self.cell.rec_t.remove(0, self.cell.rec_t.size()-1)
         #self.cell.vm_soma = self.cell.vm_soma.remove(0, self.cell.vm_soma.size()-1)
         #self.cell.vm_NOR3 = self.cell.vm_NOR3.remove(0, self.cell.vm_NOR3.size()-1)
