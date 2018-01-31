@@ -69,7 +69,6 @@ def initialize_and_run_NEURON_model(h):
     h.finitialize()
     start_time = time.clock()
     h.run()
-    h.stop()
     print ("--- %s seconds ---" % (time.clock() - start_time))
 
 
