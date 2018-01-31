@@ -35,6 +35,7 @@
 # =============================================================================
 
 import os
+import copy
 
 from neuron import h
 import sciunit
@@ -114,6 +115,7 @@ class PurkinjeCell( sciunit.Model,
         #os.chdir(cwd + os.sep + "models" + os.sep + "cells" \
         #           + os.sep + "PC2015Masoli"
         self.cell = Purkinje()
+        self.reset_cell = copy.deepcopy(self.cell)
         #os.chdir(cwd)  # reset to original directory
         #
         # discover no.cores in 1CPU & activate multisplit to use all cores
@@ -331,8 +333,8 @@ class PurkinjeCell( sciunit.Model,
         for i in range(len(self.predicted_files_full_path)):
             os.remove(self.predicted_files_full_path[i])
         self.predictions = {}
-        h('forall delete_section)')
-        self.cell = Purkinje()
+        del self.cell
+        self.cell = self.reset_cell
         #self.cell.rec_t = self.cell.rec_t.remove(0, self.cell.rec_t.size()-1)
         #self.cell.vm_soma = self.cell.vm_soma.remove(0, self.cell.vm_soma.size()-1)
         #self.cell.vm_NOR3 = self.cell.vm_NOR3.remove(0, self.cell.vm_NOR3.size()-1)
