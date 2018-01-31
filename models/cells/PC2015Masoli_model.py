@@ -197,9 +197,7 @@ class PurkinjeCell( sciunit.Model,
         #
         # =============Save predictions in "model_predictions"================
         #
-        print self.predictions
         sp(self, "voltage_response", self.prediction_dir_path)
-        print self.predictions
         # ====================================================================
         #
         print " Done!"
@@ -333,12 +331,14 @@ class PurkinjeCell( sciunit.Model,
         for i in range(len(self.predicted_files_full_path)):
             os.remove(self.predicted_files_full_path[i])
         self.predictions = {}
-        self.cell.rec_t = self.cell.rec_t.remove(0, self.cell.rec_t.size()-1)
-        self.cell.vm_soma = self.cell.vm_soma.remove(0, self.cell.vm_soma.size()-1)
-        self.cell.vm_NOR3 = self.cell.vm_NOR3.remove(0, self.cell.vm_NOR3.size()-1)
-        self.cell.rec_t.record(h._ref_t)
-        self.cell.vm_soma.record(self.cell.soma(0.5)._ref_v)
-        self.cell.vm_NOR3.record(self.cell.axonNOR3(0.5)._ref_v)
+        h('forall delete_section)')
+        self.cell = Purkinje()
+        #self.cell.rec_t = self.cell.rec_t.remove(0, self.cell.rec_t.size()-1)
+        #self.cell.vm_soma = self.cell.vm_soma.remove(0, self.cell.vm_soma.size()-1)
+        #self.cell.vm_NOR3 = self.cell.vm_NOR3.remove(0, self.cell.vm_NOR3.size()-1)
+        #self.cell.rec_t.record(h._ref_t)
+        #self.cell.vm_soma.record(self.cell.soma(0.5)._ref_v)
+        #self.cell.vm_NOR3.record(self.cell.axonNOR3(0.5)._ref_v)
     # ----Class method----
     # PurkinjeCell()
     # pc = PurkinjeCell.instance
