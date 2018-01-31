@@ -82,16 +82,16 @@ class PurkinjeCell( sciunit.Model,
     # AFTER the model is in the HBP Validation Framework Model catalog, set the generated uuid
     uuid = "22dc8fd3-c62b-4e07-9e47-f5829e038d6d"
     #
-    instance = None # for only ONE class instance and for reset()
+    #instance = None # for only ONE class instance and for reset()
     #
     def __init__(self):
         #
         # Initialize the class instance
-        if type(self).instance is None:
+        #if type(self).instance is None:
             # initialize if PurkinjeCell.instance does not exist
-            type(self).instance = self
-        else: # raise error
-            raise RuntimeError("Only one instance of 'PurkinjeCell' can exist at a time")
+        #    type(self).instance = self
+        #else: # raise error
+        #    raise RuntimeError("Only one instance of 'PurkinjeCell' can exist at a time")
         #
         self.model_scale = "cells"
         self.model_name = "PC2015Masoli"
@@ -327,26 +327,27 @@ class PurkinjeCell( sciunit.Model,
     # modified: 
     # Note: This function resets the model by removing any stored data.
     # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #def reset( self ):
-    #    for i in range(len(self.predicted_files_full_path)):
-    #        os.remove(self.predicted_files_full_path[i])
-    #    self.predictions = {}
-    #    self.cell.rec_t = h.Vector()
-    #    self.cell.rec_t.record(h._ref_t)
-    #    self.cell.vm_soma = h.Vector()
-    #    self.cell.vm_soma.record(self.cell.soma(0.5)._ref_v)
-    #    self.cell.vm_NOR3 = h.Vector()
-    #    self.cell.vm_NOR3.record(self.cell.axonNOR3(0.5)._ref_v)
+    def reset( self ):
+        for i in range(len(self.predicted_files_full_path)):
+            os.remove(self.predicted_files_full_path[i])
+        self.predictions = {}
+        self.cell.rec_t = self.cell.rec_t.remove(0, self.cell.rec_t.size()-1)
+        self.cell.vm_soma = self.cell.vm_soma.remove(0, self.cell.vm_soma.size()-1)
+        self.cell.vm_NOR3 = self.cell.vm_NOR3.remove(0, self.cell.vm_NOR3.size()-1)
+        self.cell.rec_t.record(h._ref_t)
+        self.cell.vm_soma.record(self.cell.soma(0.5)._ref_v)
+        self.cell.vm_NOR3.record(self.cell.axonNOR3(0.5)._ref_v)
+    # ----Class method----
     # PurkinjeCell()
     # pc = PurkinjeCell.instance
     # PurkinjeCell.reset()
     # pc = PurkinjeCell.instance
-    @classmethod
-    def reset(cls):
+    #@classmethod
+    #def reset(cls):
         # Clear PurkinjeCell.instance so that __init__ does not fail
-        cls.instance = None
+    #    cls.instance = None
         # Call initialization
-        cls.self = PurkinjeCell()
+    #    cls.self = PurkinjeCell()
     
 #
 # ==========================================================================
