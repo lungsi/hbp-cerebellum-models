@@ -357,13 +357,21 @@ class PurkinjeCell( sciunit.Model,
         #self.cell.rec_t.record(h._ref_t)
         #self.cell.vm_soma.record(self.cell.soma(0.5)._ref_v)
         #self.cell.vm_NOR3.record(self.cell.axonNOR3(0.5)._ref_v)
-        h('proc init() {finitialize(v_init) nrnpython("myinit()")}')
+        #h('proc init() {finitialize(v_init) nrnpython("myinit()")}')
         print('initializing...')
         # only need the following if states have been changed
         if h.cvode.active():
             h.cvode.re_init()
         else:
             h.fcurrent()
+        # Make all assigned variables (currents, conductances, etc)
+        # consistent with the values of the states.
+        h.fcurrent()
+        # Initializes the Vectors which are recording variables.
+        # i.e. resize to 0 and append the current values of the variables.
+        # This is done at the end of an finitialize() call but needs to be
+        # done again to complete initialization if the user changes states or
+        # assigned variables that are being recorded.
         h.frecord_init()
     # ----Class method----
     # PurkinjeCell()
