@@ -337,7 +337,11 @@ class PurkinjeCell( sciunit.Model,
         #self.cell = self.reset_cell
         print h._ref_t
         print h._ref_t[0]
-        h._ref_t = None
+        h._ref_t[0] = 0.0
+        print self.cell.soma(0.5)._ref_v[0]
+        self.cell.soma(0.5)._ref_v[0] = 0.0
+        print self.cell.axonNOR3(0.5)._ref_v[0]
+        self.cell.axonNOR3(0.5)._ref_v[0] = 0.0
         print h._ref_t
         print h._ref_t[0]
         #self.cell.rec_t = self.cell.rec_t.remove(0, self.cell.rec_t.size()-1)
