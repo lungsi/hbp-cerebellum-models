@@ -373,6 +373,10 @@ class PurkinjeCell( sciunit.Model,
         # done again to complete initialization if the user changes states or
         # assigned variables that are being recorded.
         h.frecord_init()
+        h._ref_t[0] = 0.0
+        self.cell.soma(0.5)._ref_v[0] = -65.0
+        self.cell.axonNOR3(0.5)._ref_v[0] = -65.0
+        
     # ----Class method----
     # PurkinjeCell()
     # pc = PurkinjeCell.instance
