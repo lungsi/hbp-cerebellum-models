@@ -197,7 +197,9 @@ class PurkinjeCell( sciunit.Model,
         #
         # =============Save predictions in "model_predictions"================
         #
+        print self.predictions
         sp(self, "voltage_response", self.prediction_dir_path)
+        print self.predictions
         # ====================================================================
         #
         print " Done!"
