@@ -346,12 +346,7 @@ class PurkinjeCell( sciunit.Model,
         # Clear PurkinjeCell.instance so that __init__ does not fail
         cls.instance = None
         # Call initialization
-        cls.self = PurkinjeCell( sciunit.Model,
-                                 ProducesSpikeTrain,
-                                 ProducesElectricalResponse,
-                                 CanKOAISChannels,
-                                 CanKOCav2pt1Channels,
-                                 CanDisconnectDendrites )
+        cls.self = PurkinjeCell()
     
 #
 # ==========================================================================
