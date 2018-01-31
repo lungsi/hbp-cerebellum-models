@@ -87,7 +87,7 @@ class PurkinjeCell( sciunit.Model,
     def __init__(self):
         #
         # Initialize the class instance
-        if type(self).instance is None
+        if type(self).instance is None:
             # initialize if PurkinjeCell.instance does not exist
             type(self).instance = self
         else: # raise error
