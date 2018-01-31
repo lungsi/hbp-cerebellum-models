@@ -15,11 +15,11 @@ class Purkinje:
     def __init__(self):
 
         # =======Add-on to original Purkinje.py=======
-        cwd = os.getcwd() # this is the root
-        path_to_files = cwd + os.sep + "models" + \
-                      os.sep + "cells" + os.sep + \
-                      "PC2015Masoli" + os.sep
-        os.chdir(path_to_files) # change to path_to_files
+        #cwd = os.getcwd() # this is the root
+        #path_to_files = cwd + os.sep + "models" + \
+        #              os.sep + "cells" + os.sep + \
+        #              "PC2015Masoli" + os.sep
+        #os.chdir(path_to_files) # change to path_to_files
         # ==============End of the Add-on=============
 
 #Soma        
@@ -530,5 +530,5 @@ class Purkinje:
 	self.vm_NOR3.record(self.axonNOR3(0.5)._ref_v)
 
         # =======Add-on to original Purkinje.py=======
-        os.chdir(cwd)      # reset to start directory
+        #os.chdir(cwd)      # reset to start directory
         # ==============End of the Add-on=============
