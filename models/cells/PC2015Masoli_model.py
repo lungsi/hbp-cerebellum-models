@@ -137,6 +137,13 @@ class PurkinjeCell( sciunit.Model,
         # =====specify cell_regions from which you want predictions======
         # created 22 Sept 2017
         self.cell_regions = {"vm_soma": 0.0, "vm_NOR3": 0.0}
+        #
+        print self.cell.rec_t.size()
+        print h._ref_t[0]
+        self.cell.vm_soma.size()
+        print self.cell.soma(0.5)._ref_v[0]
+        self.cell.vm_NOR3.size()
+        print self.cell.axonNOR3(0.5)._ref_v[0]
     
 
     # +++++++++++++++Model Capability: produce_spike_train++++++++++++++++
