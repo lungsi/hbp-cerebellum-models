@@ -360,10 +360,12 @@ class PurkinjeCell( sciunit.Model,
         #h('proc init() {finitialize(v_init) nrnpython("myinit()")}')
         print('initializing...')
         # only need the following if states have been changed
-        if h.cvode.active():
-            h.cvode.re_init()
-        else:
-            h.fcurrent()
+        #if h.cvode.active():
+        #    h.cvode.re_init()
+        #else:
+        #    h.fcurrent()
+        Fixed_step = h.CVode()
+        Fixed_step.active(0) #model doesn't work with variable time-step
         # Make all assigned variables (currents, conductances, etc)
         # consistent with the values of the states.
         h.fcurrent()
