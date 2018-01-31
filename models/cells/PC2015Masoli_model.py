@@ -330,8 +330,8 @@ class PurkinjeCell( sciunit.Model,
     # Note: This function resets the model by removing any stored data.
     # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     def reset( self ):
-        for i in range(len(self.predicted_files_full_path)):
-            os.remove(self.predicted_files_full_path[i])
+        #for i in range(len(self.predicted_files_full_path)):
+        #    os.remove(self.predicted_files_full_path[i])
         self.predictions = {}
         #del self.cell
         #self.cell = self.reset_cell
@@ -344,12 +344,12 @@ class PurkinjeCell( sciunit.Model,
         self.cell.axonNOR3(0.5)._ref_v[0] = 0.0
         print h._ref_t
         print h._ref_t[0]
-        #self.cell.rec_t = self.cell.rec_t.remove(0, self.cell.rec_t.size()-1)
-        #self.cell.vm_soma = self.cell.vm_soma.remove(0, self.cell.vm_soma.size()-1)
-        #self.cell.vm_NOR3 = self.cell.vm_NOR3.remove(0, self.cell.vm_NOR3.size()-1)
-        #self.cell.rec_t.record(h._ref_t)
-        #self.cell.vm_soma.record(self.cell.soma(0.5)._ref_v)
-        #self.cell.vm_NOR3.record(self.cell.axonNOR3(0.5)._ref_v)
+        self.cell.rec_t = self.cell.rec_t.remove(0, self.cell.rec_t.size()-1)
+        self.cell.vm_soma = self.cell.vm_soma.remove(0, self.cell.vm_soma.size()-1)
+        self.cell.vm_NOR3 = self.cell.vm_NOR3.remove(0, self.cell.vm_NOR3.size()-1)
+        self.cell.rec_t.record(h._ref_t)
+        self.cell.vm_soma.record(self.cell.soma(0.5)._ref_v)
+        self.cell.vm_NOR3.record(self.cell.axonNOR3(0.5)._ref_v)
     # ----Class method----
     # PurkinjeCell()
     # pc = PurkinjeCell.instance
