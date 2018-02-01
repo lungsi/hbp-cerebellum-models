@@ -388,12 +388,13 @@ class PurkinjeCell( sciunit.Model,
         #os.chdir(self.path_to_files) # change to path_to_files
         #self.cell = Purkinje() # self.reset_cell = copy.deepcopy(self.cell)
         #os.chdir(self.cwd)
-        self.cell.rec_t = h.Vector()
-        self.cell.vm_soma = h.Vector()
-        self.cell.axonNOR3 = h.Vector()
-        self.cell.rec_t.record(h._ref_t)
-        self.cell.vm_soma.record(self.cell.soma(0.5)._ref_v)
+        #self.cell.rec_t = h.Vector()
+        #self.cell.vm_soma = h.Vector()
+        #self.cell.axonNOR3 = h.Vector()
+        #self.cell.rec_t.record(h._ref_t)
+        #self.cell.vm_soma.record(self.cell.soma(0.5)._ref_v)
         #self.cell.vm_NOR3.record(self.cell.axonNOR3(0.5)._ref_v)
+        h.t = 0.0
         
     # ----Class method----
     # PurkinjeCell()
