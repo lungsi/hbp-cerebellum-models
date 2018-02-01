@@ -20,7 +20,6 @@ class Purkinje:
         #              os.sep + "cells" + os.sep + \
         #              "PC2015Masoli" + os.sep
         #os.chdir(path_to_files) # change to path_to_files
-	self.parallelcontext = h.ParallelContext()
         # ==============End of the Add-on=============
 
 #Soma        
