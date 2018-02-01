@@ -57,6 +57,7 @@ from ..simulation_manager import discover_cores_activate_multisplit as dcam
 from ..simulation_manager import set_runtime_parameters as set_runtime
 from ..simulation_manager import initialize_and_run_NEURON_model as irNm
 from ..simulation_manager import save_predictions as sp
+from ..simulation_manager import clone_method
 #from ..signal_processing_manager import convert_vm_to_spike_train_from_file as getspikes
 from ..signal_processing_manager import convert_voltage_response_to_spike_train as getspikes
 from PC2015Masoli.Purkinje import Purkinje
