@@ -42,6 +42,9 @@ import os
 import subprocess
 import multiprocessing  # for utilities.discover_cores_activate_multisplit(h)
 import time
+import sys        # for clone_method()
+import types      # for clone_method
+import functools  # for clone_method
 
 from neuron import h
 import numpy as np
@@ -152,6 +155,28 @@ def save_predictions(model, response_type, dir_path):
             #
     # save the file_name for possible reset
     #model.predicted_files_full_path.append(file_name_full_path)
+
+# created 01 January 2018
+def clone_method(m):
+    if (sys.version_info > (3, 0)):
+        # Python 3 code
+        # import modules
+        f = types.FunctionType( m.__code__,
+                                m.__globals__,
+                                name = m.__name__,
+                                argdefs = m.__defaults__,
+                                closure = m.__closure__ )
+    else:
+        # Python 2 code
+        # import modules
+        f = types.FunctionType( m.func_code,
+                                m.func_globals,
+                                name = m.func_name,
+                                argdefs = m.func_defaults,
+                                closure = m.func_closure )
+    # wrap the method to f
+    f = functools.update_wrapper(f, m)
+    return f
 
 #
 #
