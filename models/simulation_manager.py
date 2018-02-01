@@ -61,6 +61,17 @@ def discover_cores_activate_multisplit(h):
     #print "cores", cores
 
 
+# ++++++++++++++++++++++set_runtime_parameters+++++++++++++++++++++
+# created:  03 August 2017
+# modified: 01 January 2018 (renamed from set_simulation_properties)
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+def set_runtime_parameters( h, setup_parameters ):
+        h.dt = setup_parameters["dt"]
+        h.celsius = setup_parameters["celsius"]
+        h.tstop = setup_parameters["tstop"]
+        h.v_init = setup_parameters["v_init"]
+
+        
 def initialize_and_run_NEURON_model(h):
     """
     Use case: initialize_and_run_NEURON_model(h)
