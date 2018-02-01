@@ -54,6 +54,7 @@ from ..file_manager import check_and_make_directory as cmdir
 from ..model_manager import check_and_compile_model as ccm
 from ..simulation_manager import check_capability_availability as cca
 from ..simulation_manager import discover_cores_activate_multisplit as dcam
+from ..simulation_manager import set_runtime_parameters as set_runtime
 from ..simulation_manager import initialize_and_run_NEURON_model as irNm
 from ..simulation_manager import save_predictions as sp
 #from ..signal_processing_manager import convert_vm_to_spike_train_from_file as getspikes
