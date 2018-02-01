@@ -388,9 +388,9 @@ class PurkinjeCell( sciunit.Model,
         #os.chdir(self.path_to_files) # change to path_to_files
         #self.cell = Purkinje() # self.reset_cell = copy.deepcopy(self.cell)
         #os.chdir(self.cwd)
-        self.cell.rec_t.size() = 0.0
-        self.cell.vm_soma.size() = 0.0
-        self.cell.axonNOR3.size() = 0.0
+        self.cell.rec_t.size() = h.Vector()
+        self.cell.vm_soma.size() = h.Vector()
+        self.cell.axonNOR3.size() = h.Vector()
         
     # ----Class method----
     # PurkinjeCell()
