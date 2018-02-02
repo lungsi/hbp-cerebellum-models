@@ -213,7 +213,10 @@ def run_model(model_instance, runtime_parameters=None, stimulus_parameters=None)
     #model_instance.set_stimulation_properties(stimulus_parameters)
     #model_instance.produce_voltage_response()
     set_runtime_parameters(model_instance, runtime_parameters)
-    set_stimulation_properties(model_instance, stimulus_parameters)
+    if stimulus_parameters == None:
+        pass
+    else:
+        set_stimulation_properties(model_instance, stimulus_parameters)
     model_instance.produce_voltage_response()
 #
 #
