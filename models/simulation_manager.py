@@ -104,14 +104,14 @@ def set_stimulation_properties( model, current_parameters ):
                     current_parameters["current"+str(i+1)]["delay"]
     return list_of_stimuli
     
-def initialize_and_run_NEURON_model(h):
+def initialize_and_run_NEURON_model(model):
     """
     Use case: initialize_and_run_NEURON_model(h)
     where h is a module; from neuron import h.
     """
-    h.finitialize()
+    model.h.finitialize()
     start_time = time.clock()
-    h.run()
+    model.h.run()
     print ("--- %s seconds ---" % (time.clock() - start_time))
 
 
