@@ -397,6 +397,7 @@ class PurkinjeCell( sciunit.Model,
         #self.cell.parallelcontext.gid_clear()
         #self.cell.parallelcontext = h.ParallelContext()
         self.pid = os.fork()
+        print('intialization done')
         
     def reset_start( self ):
         self.pid = os.fork()
