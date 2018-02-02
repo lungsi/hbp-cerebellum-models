@@ -396,11 +396,12 @@ class PurkinjeCell( sciunit.Model,
         #self.cell.vm_NOR3.record(self.cell.axonNOR3(0.5)._ref_v)
         #self.cell.parallelcontext.gid_clear()
         #self.cell.parallelcontext = h.ParallelContext()
-        
-    def reset_start(self):
         self.pid = os.fork()
         
-    def reset_stop(self):
+    def reset_start( self ):
+        self.pid = os.fork()
+        
+    def reset_stop( self ):
         os._exit(self.pid)
         
     # ----Class method----
