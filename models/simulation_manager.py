@@ -244,16 +244,18 @@ def run_model(model_instance, runtime_parameters=None, stimulus_parameters=None)
     #model_instance.set_simulation_properties(runtime_parameters)
     #model_instance.set_stimulation_properties(stimulus_parameters)
     #model_instance.produce_voltage_response()
-    try:
-        model_instance.pid
-    except AttributeError:
-        print("AttributeError")
-        model_instance.pid = os.fork()
-    else:
-        print("os._exit")
-        model_instance.pid = model_instance.pid + 1
+    #try:
+    #    model_instance.pid
+    #except AttributeError:
+    #    print("AttributeError")
+    #    model_instance.pid = os.fork()
+    #else:
+    #    print("os._exit")
+    #    model_instance.pid = model_instance.pid + 1
         #os._exit(model_instance.pid)
         #del model_instance.pid
+    del model_instance.h
+    model_instance.h = h
     set_runtime_parameters(model_instance, runtime_parameters)
     if stimulus_parameters == None:
         pass
