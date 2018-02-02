@@ -394,15 +394,15 @@ class PurkinjeCell( sciunit.Model,
         #self.cell.rec_t.record(h._ref_t)
         #self.cell.vm_soma.record(self.cell.soma(0.5)._ref_v)
         #self.cell.vm_NOR3.record(self.cell.axonNOR3(0.5)._ref_v)
-        #self.cell.parallelcontext.gid_clear()
-        #self.cell.parallelcontext = h.ParallelContext()
+        self.cell.parallelcontext.gid_clear()
+        self.cell.parallelcontext = h.ParallelContext()
         self.pid = os.fork()
         print('intialization done')
         
     def reset_start( self ):
         self.pid = os.fork()
         
-    def reset_stop( self ):
+    def reset_exit( self ):
         os._exit(self.pid)
         
     # ----Class method----
