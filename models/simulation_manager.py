@@ -179,7 +179,9 @@ def clone_method(m):
     return f
 
 # created 02 January 2018
-def run_model(model_instance):
+def run_model(model_instance, runtime_parameters=None, stimulus_parameters=None):
+    model_instance.set_simulation_properties(runtime_parameters)
+    model_instance.set_stimulation_properties(stimulus_parameters)
     model_instance.produce_spike_train()
 #
 #
