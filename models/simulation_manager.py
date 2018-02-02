@@ -182,6 +182,6 @@ def clone_method(m):
 def run_model(model_instance, runtime_parameters=None, stimulus_parameters=None):
     model_instance.set_simulation_properties(runtime_parameters)
     model_instance.set_stimulation_properties(stimulus_parameters)
-    model_instance.produce_spike_train()
+    model_instance.produce_voltage_response()
 #
 #
