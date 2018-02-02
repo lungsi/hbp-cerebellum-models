@@ -399,11 +399,11 @@ class PurkinjeCell( sciunit.Model,
         self.pid = os.fork()
         print('intialization done')
         
-    def reset_start( self ):
-        self.pid = os.fork()
+    #def reset_start( self ):
+    #    self.pid = os.fork()
         
-    def reset_exit( self ):
-        os._exit(self.pid)
+    #def reset_exit( self ):
+    #    os._exit(self.pid)
         
     # ----Class method----
     # PurkinjeCell()
