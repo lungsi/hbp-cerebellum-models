@@ -210,7 +210,7 @@ class PurkinjeCell( sciunit.Model,
         # =================Setup-Initialize-Run Simulation====================
         #
         #self.set_simulation_properties() # set-up simulation time
-        irNm(self.h)                          # initialize & run NEURON
+        irNm(self)                          # initialize & run NEURON
         # ====================================================================
         #
         # =============Save predictions in "model_predictions"================
