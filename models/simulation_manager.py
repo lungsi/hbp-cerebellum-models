@@ -103,6 +103,38 @@ def set_stimulation_properties( model, current_parameters ):
         model.list_of_stimuli[i].delay = \
                     current_parameters["current"+str(i+1)]["delay"]
     return model.list_of_stimuli
+
+def inject_current( model, current_parameters, stim_type="IClamp" ):
+    model.list_of_stimuli = []
+    n = len(current_parameters) # number of currents
+    # =============first create 'n' IClamps
+    for i in range(n):
+        key = "current"+str(i+1)
+        if stim_type=="IClamp":
+            # IClamp for each stimulus
+            model.list_of_stimuli.append( model.h.IClamp(0.5, sec=model.cell.soma) )
+            model.list_of_stimuli[i].amp = \
+                    current_parameters["current"+str(i+1)]["amp"]
+            model.list_of_stimuli[i].dur = \
+                    current_parameters["current"+str(i+1)]["dur"]
+            model.list_of_stimuli[i].delay = \
+                    current_parameters["current"+str(i+1)]["delay"]
+        elif stim_type=="IRamp":
+            model.list_of_stimuli.append( model.h.IRamp(0.5, sec=model.cell.soma) )
+            model.list_of_stimuli[i].delay = \
+                    current_parameters[key]["delay"]
+            model.list_of_stimuli[i].dur = \
+                    current_parameters[key]["dur"]
+            model.list_of_stimuli[i].amp_initial = \
+                    current_parameters[key]["amp_initial"]
+            if i==0:
+                model.list_of_simuli[i].amp_final = \
+                        current_parameters[key]["amp_final"]
+            else:
+                model.list_of_stimuli[i].amp_final = \
+                        current_parameters[key]["amp_final"] \
+                        - current_parameters[key]["amp_initial"]
+    return model.list_of_stimuli
     
 def initialize_and_run_NEURON_model(model):
     """
@@ -216,7 +248,8 @@ def run_model(model_instance, runtime_parameters=None, stimulus_parameters=None)
     if stimulus_parameters == None:
         pass
     else:
-        set_stimulation_properties(model_instance, stimulus_parameters)
+        #set_stimulation_properties(model_instance, stimulus_parameters)
+        inject_current(model_instance, stimulus_parameters, stim_type="IClamp")
     model_instance.produce_voltage_response()
 #
 #
