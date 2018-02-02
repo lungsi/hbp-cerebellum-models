@@ -96,6 +96,8 @@ class PurkinjeCell( sciunit.Model,
         #else: # raise error
         #    raise RuntimeError("Only one instance of 'PurkinjeCell' can exist at a time")
         #
+        self.h = h
+        #
         self.model_scale = "cells"
         self.model_name = "PC2015Masoli"
         # check that the NEURON model is compiled if not compile
@@ -106,10 +108,10 @@ class PurkinjeCell( sciunit.Model,
         #print model_mod_path, model_lib_path, os.getcwd()
         #
         # load NEURON model library
-        h.nrn_load_dll(model_lib_path)
+        self.h.nrn_load_dll(model_lib_path)
         #
         # fixed time-step only
-        Fixed_step = h.CVode()
+        Fixed_step = self.h.CVode()
         Fixed_step.active(0) #model doesn't work with variable time-step
         #
         # instantiate cell template
@@ -126,7 +128,7 @@ class PurkinjeCell( sciunit.Model,
         #os.chdir(cwd)  # reset to original directory
         #
         # discover no.cores in 1CPU & activate multisplit to use all cores
-        dcam(h)
+        dcam(self.h)
         #
         # =========attributed inherited from sciunit.Model===============
         # pc.name defaults to class name, i.e, PurkinjeCell
@@ -208,7 +210,7 @@ class PurkinjeCell( sciunit.Model,
         # =================Setup-Initialize-Run Simulation====================
         #
         #self.set_simulation_properties() # set-up simulation time
-        irNm(h)                          # initialize & run NEURON
+        irNm(self.h)                          # initialize & run NEURON
         # ====================================================================
         #
         # =============Save predictions in "model_predictions"================
@@ -303,10 +305,10 @@ class PurkinjeCell( sciunit.Model,
     #       v_init =
     # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     def set_simulation_properties( self, setup_parameters ):
-        h.dt = setup_parameters["dt"]
-        h.celsius = setup_parameters["celsius"]
-        h.tstop = setup_parameters["tstop"]
-        h.v_init = setup_parameters["v_init"]
+        self.h.dt = setup_parameters["dt"]
+        self.h.celsius = setup_parameters["celsius"]
+        self.h.tstop = setup_parameters["tstop"]
+        self.h.v_init = setup_parameters["v_init"]
 
 
     # +++++++++++++++++++++set_stimulation_properties++++++++++++++++++++
@@ -329,7 +331,7 @@ class PurkinjeCell( sciunit.Model,
         # =============first create 'n' IClamps
         for i in range(n):
             # IClamp for each stimulus
-            list_of_stimuli.append( h.IClamp(0.5, sec=self.cell.soma) )
+            list_of_stimuli.append( self.h.IClamp(0.5, sec=self.cell.soma) )
             list_of_stimuli[i].amp = \
                     current_parameters["current"+str(i+1)]["amp"]
             list_of_stimuli[i].dur = \
