@@ -116,13 +116,13 @@ class PurkinjeCell( sciunit.Model,
         #cwd = os.getcwd()
         #os.chdir(cwd + os.sep + "models" + os.sep + "cells" \
         #           + os.sep + "PC2015Masoli"
-        self.cwd = os.getcwd() # this is the root
-        self.path_to_files = self.cwd + os.sep + "models" + \
-                        os.sep + "cells" + os.sep + \
-                        "PC2015Masoli" + os.sep
-        os.chdir(self.path_to_files) # change to path_to_files
+        #self.cwd = os.getcwd() # this is the root
+        #self.path_to_files = self.cwd + os.sep + "models" + \
+        #                os.sep + "cells" + os.sep + \
+        #                "PC2015Masoli" + os.sep
+        #os.chdir(self.path_to_files) # change to path_to_files
         self.cell = Purkinje() # self.reset_cell = copy.deepcopy(self.cell)
-        os.chdir(self.cwd)
+        #os.chdir(self.cwd)
         #os.chdir(cwd)  # reset to original directory
         #
         # discover no.cores in 1CPU & activate multisplit to use all cores
