@@ -252,14 +252,13 @@ def run_model(model_instance, runtime_parameters=None, stimulus_parameters=None)
     else:
         print("os._exit")
         os._exit(model_instance.pid)
+        del model_instance.pid
     set_runtime_parameters(model_instance, runtime_parameters)
     if stimulus_parameters == None:
         pass
     else:
         inject_current(model_instance, stimulus_parameters, stim_type="IClamp")
     model_instance.produce_voltage_response()
-    print("model run and os._exit")
-    os._exit(model_instance.pid)
 
 #
 #
