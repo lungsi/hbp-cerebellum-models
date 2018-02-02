@@ -258,7 +258,8 @@ def run_model(model_instance, runtime_parameters=None, stimulus_parameters=None)
         pass
     else:
         inject_current(model_instance, stimulus_parameters, stim_type="IClamp")
-    model_instance.produce_voltage_response()
+    #model_instance.produce_voltage_response()
+    model_instance.produce_spike_train()
 
 #
 #
