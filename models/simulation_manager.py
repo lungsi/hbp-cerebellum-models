@@ -74,7 +74,36 @@ def set_runtime_parameters( h, setup_parameters ):
         h.tstop = setup_parameters["tstop"]
         h.v_init = setup_parameters["v_init"]
 
-        
+
+# +++++++++++++++++++++set_stimulation_properties++++++++++++++++++++
+# created:  01 September 2017
+# modified: 10 October 2017
+# Note: This function is NOT model capability function.
+#       This function takes four arguments:
+#       time_step = 
+#       temp =
+#       t_final =
+#       v_init =
+#       ****IMPORTANT*****
+#       With NEURON stimulus setup as a seperate python function it
+#       requires that the returned stimulus is RE-set to the cell.soma
+#       This is why the function returns the list of stimuli
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+def set_stimulation_properties( h, current_parameters ):
+    list_of_stimuli = []
+    n = len(current_parameters) # number of currents
+    # =============first create 'n' IClamps
+    for i in range(n):
+        # IClamp for each stimulus
+        list_of_stimuli.append( h.IClamp(0.5, sec=self.cell.soma) )
+        list_of_stimuli[i].amp = \
+                    current_parameters["current"+str(i+1)]["amp"]
+        list_of_stimuli[i].dur = \
+                    current_parameters["current"+str(i+1)]["dur"]
+        list_of_stimuli[i].delay = \
+                    current_parameters["current"+str(i+1)]["delay"]
+    return list_of_stimuli
+    
 def initialize_and_run_NEURON_model(h):
     """
     Use case: initialize_and_run_NEURON_model(h)
@@ -180,8 +209,11 @@ def clone_method(m):
 
 # created 02 January 2018
 def run_model(model_instance, runtime_parameters=None, stimulus_parameters=None):
-    model_instance.set_simulation_properties(runtime_parameters)
-    model_instance.set_stimulation_properties(stimulus_parameters)
+    #model_instance.set_simulation_properties(runtime_parameters)
+    #model_instance.set_stimulation_properties(stimulus_parameters)
+    #model_instance.produce_voltage_response()
+    set_runtime_parameters(model_instance.h, runtime_parameters)
+    set_stimulation_properties(model_instance.h, stimulus_parameters)
     model_instance.produce_voltage_response()
 #
 #
