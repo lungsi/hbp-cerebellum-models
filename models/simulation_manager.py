@@ -178,5 +178,8 @@ def clone_method(m):
     f = functools.update_wrapper(f, m)
     return f
 
+# created 02 January 2018
+def run_model(model_instance):
+    model_instance.produce_spike_train()
 #
 #
