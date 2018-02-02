@@ -244,12 +244,19 @@ def run_model(model_instance, runtime_parameters=None, stimulus_parameters=None)
     #model_instance.set_simulation_properties(runtime_parameters)
     #model_instance.set_stimulation_properties(stimulus_parameters)
     #model_instance.produce_voltage_response()
+    try:
+        model_instance.pid
+    except AttributeError:
+        model_instance.pid = os.fork()
+    else:
+        os._exit(model_instance.pid)
     set_runtime_parameters(model_instance, runtime_parameters)
     if stimulus_parameters == None:
         pass
     else:
-        #set_stimulation_properties(model_instance, stimulus_parameters)
         inject_current(model_instance, stimulus_parameters, stim_type="IClamp")
     model_instance.produce_voltage_response()
+    os._exit(model_instance.pid)
+
 #
 #
