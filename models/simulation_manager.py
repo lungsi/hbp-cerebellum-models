@@ -68,11 +68,11 @@ def discover_cores_activate_multisplit(h):
 # created:  03 August 2017
 # modified: 01 January 2018 (renamed from set_simulation_properties)
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-def set_runtime_parameters( h, setup_parameters ):
-        h.dt = setup_parameters["dt"]
-        h.celsius = setup_parameters["celsius"]
-        h.tstop = setup_parameters["tstop"]
-        h.v_init = setup_parameters["v_init"]
+def set_runtime_parameters( model, setup_parameters ):
+        model.h.dt = setup_parameters["dt"]
+        model.h.celsius = setup_parameters["celsius"]
+        model.h.tstop = setup_parameters["tstop"]
+        model.h.v_init = setup_parameters["v_init"]
 
 
 # +++++++++++++++++++++set_stimulation_properties++++++++++++++++++++
@@ -212,7 +212,7 @@ def run_model(model_instance, runtime_parameters=None, stimulus_parameters=None)
     #model_instance.set_simulation_properties(runtime_parameters)
     #model_instance.set_stimulation_properties(stimulus_parameters)
     #model_instance.produce_voltage_response()
-    set_runtime_parameters(model_instance.h, runtime_parameters)
+    set_runtime_parameters(model_instance, runtime_parameters)
     set_stimulation_properties(model_instance, stimulus_parameters)
     model_instance.produce_voltage_response()
 #
