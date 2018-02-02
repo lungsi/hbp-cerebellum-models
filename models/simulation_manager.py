@@ -90,19 +90,19 @@ def set_runtime_parameters( model, setup_parameters ):
 #       This is why the function returns the list of stimuli
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def set_stimulation_properties( model, current_parameters ):
-    list_of_stimuli = []
+    model.list_of_stimuli = []
     n = len(current_parameters) # number of currents
     # =============first create 'n' IClamps
     for i in range(n):
         # IClamp for each stimulus
-        list_of_stimuli.append( model.h.IClamp(0.5, sec=model.cell.soma) )
-        list_of_stimuli[i].amp = \
+        model.list_of_stimuli.append( model.h.IClamp(0.5, sec=model.cell.soma) )
+        model.list_of_stimuli[i].amp = \
                     current_parameters["current"+str(i+1)]["amp"]
-        list_of_stimuli[i].dur = \
+        model.list_of_stimuli[i].dur = \
                     current_parameters["current"+str(i+1)]["dur"]
-        list_of_stimuli[i].delay = \
+        model.list_of_stimuli[i].delay = \
                     current_parameters["current"+str(i+1)]["delay"]
-    return list_of_stimuli
+    return model.list_of_stimuli
     
 def initialize_and_run_NEURON_model(model):
     """
