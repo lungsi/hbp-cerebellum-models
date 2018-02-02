@@ -251,8 +251,9 @@ def run_model(model_instance, runtime_parameters=None, stimulus_parameters=None)
         model_instance.pid = os.fork()
     else:
         print("os._exit")
-        os._exit(model_instance.pid)
-        del model_instance.pid
+        model_instance.pid = model_instance.pid + 1
+        #os._exit(model_instance.pid)
+        #del model_instance.pid
     set_runtime_parameters(model_instance, runtime_parameters)
     if stimulus_parameters == None:
         pass
