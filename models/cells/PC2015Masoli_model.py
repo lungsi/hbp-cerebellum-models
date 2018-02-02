@@ -395,7 +395,7 @@ class PurkinjeCell( sciunit.Model,
         #self.cell.vm_soma.record(self.cell.soma(0.5)._ref_v)
         #self.cell.vm_NOR3.record(self.cell.axonNOR3(0.5)._ref_v)
         self.cell.parallelcontext.gid_clear()
-        self.cell.parallelcontext = h.ParallelContext()
+        #self.cell.parallelcontext = h.ParallelContext()
         self.pid = os.fork()
         print('intialization done')
         
