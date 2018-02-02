@@ -247,8 +247,10 @@ def run_model(model_instance, runtime_parameters=None, stimulus_parameters=None)
     try:
         model_instance.pid
     except AttributeError:
+        print("AttributeError")
         model_instance.pid = os.fork()
     else:
+        print("os._exit")
         os._exit(model_instance.pid)
     set_runtime_parameters(model_instance, runtime_parameters)
     if stimulus_parameters == None:
@@ -256,6 +258,7 @@ def run_model(model_instance, runtime_parameters=None, stimulus_parameters=None)
     else:
         inject_current(model_instance, stimulus_parameters, stim_type="IClamp")
     model_instance.produce_voltage_response()
+    print("model run and os._exit")
     os._exit(model_instance.pid)
 
 #
