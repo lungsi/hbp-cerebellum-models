@@ -59,7 +59,7 @@ def discover_cores_activate_multisplit(h):
     cores = multiprocessing.cpu_count()
     h.load_file("parcom.hoc")
     p = h.ParallelComputeTool()
-    p.change_nthread(cores, 1)
+    p.change_nthread(cores, 0) # default 1
     p.multisplit(1)
     #print "cores", cores
 
