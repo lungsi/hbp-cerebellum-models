@@ -58,9 +58,12 @@ def discover_cores_activate_multisplit(model):
     # discover no. of cores in 1CPU and activate multisplit to use all cores
     cores = multiprocessing.cpu_count()
     model.h.load_file("parcom.hoc")
-    model.parallelprocesses = model.h.ParallelComputeTool()
-    model.parallelprocesses.change_nthread(cores, 0) # default 1
-    model.parallelprocesses.multisplit(1)
+    #model.parallelprocesses = model.h.ParallelComputeTool()
+    #model.parallelprocesses.change_nthread(cores, 0) # default 1
+    #model.parallelprocesses.multisplit(1)
+    model.parallelcompute = model.h.ParallelContext()
+    model.parallelcompute.nthread(cores, 0) # default 1
+    #model.parallelcompute.multisplit()
     #print "cores", cores
 
 
@@ -244,7 +247,7 @@ def run_model(model_instance, runtime_parameters=None, stimulus_parameters=None)
     #model_instance.produce_voltage_response()
     model_instance.produce_spike_train()
     #
-    model_instance.parallelprocesses.gid_clear()
+    model_instance.parallelcompute.gid_clear()
 
 #
 #
