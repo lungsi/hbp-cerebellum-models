@@ -50,16 +50,16 @@ from neuron import h
 import numpy as np
 
 
-def discover_cores_activate_multisplit(h):
+def discover_cores_activate_multisplit(model):
     """
     Use case: discover_cores_activate_multisplit(h)
     where h is a module; from neuron import h.
     """
     # discover no. of cores in 1CPU and activate multisplit to use all cores
     cores = multiprocessing.cpu_count()
-    h.load_file("parcom.hoc")
-    p = h.ParallelComputeTool()
-    p.change_nthread(cores, 1) # default 1
+    model.h.load_file("parcom.hoc")
+    p = model.h.ParallelComputeTool()
+    p.change_nthread(cores, 0) # default 1
     p.multisplit(1)
     #print "cores", cores
 
@@ -234,6 +234,8 @@ def run_model(model_instance, runtime_parameters=None, stimulus_parameters=None)
         #del model_instance.pid
     #del model_instance.h
     #model_instance.h = h
+    discover_cores_activate_multisplit(model_instance)
+    #
     set_runtime_parameters(model_instance, runtime_parameters)
     if stimulus_parameters == None:
         pass
