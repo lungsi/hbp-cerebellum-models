@@ -59,7 +59,7 @@ def discover_cores_activate_multisplit(h):
     cores = multiprocessing.cpu_count()
     h.load_file("parcom.hoc")
     p = h.ParallelComputeTool()
-    p.change_nthread(cores, 0) # default 1
+    p.change_nthread(cores, 1) # default 1
     p.multisplit(1)
     #print "cores", cores
 
@@ -75,35 +75,13 @@ def set_runtime_parameters( model, setup_parameters ):
         model.h.v_init = setup_parameters["v_init"]
 
 
-# +++++++++++++++++++++set_stimulation_properties++++++++++++++++++++
+# ++++++++++++++++++++++++++inject_current++++++++++++++++++++++++++
 # created:  01 September 2017
 # modified: 10 October 2017
-# Note: This function is NOT model capability function.
-#       This function takes four arguments:
-#       time_step = 
-#       temp =
-#       t_final =
-#       v_init =
-#       ****IMPORTANT*****
-#       With NEURON stimulus setup as a seperate python function it
+# Note: With NEURON stimulus setup as a seperate python function it
 #       requires that the returned stimulus is RE-set to the cell.soma
 #       This is why the function returns the list of stimuli
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-def set_stimulation_properties( model, current_parameters ):
-    model.list_of_stimuli = []
-    n = len(current_parameters) # number of currents
-    # =============first create 'n' IClamps
-    for i in range(n):
-        # IClamp for each stimulus
-        model.list_of_stimuli.append( model.h.IClamp(0.5, sec=model.cell.soma) )
-        model.list_of_stimuli[i].amp = \
-                    current_parameters["current"+str(i+1)]["amp"]
-        model.list_of_stimuli[i].dur = \
-                    current_parameters["current"+str(i+1)]["dur"]
-        model.list_of_stimuli[i].delay = \
-                    current_parameters["current"+str(i+1)]["delay"]
-    return model.list_of_stimuli
-
 def inject_current( model, current_parameters, stim_type="IClamp" ):
     model.list_of_stimuli = []
     n = len(current_parameters) # number of currents
@@ -254,8 +232,8 @@ def run_model(model_instance, runtime_parameters=None, stimulus_parameters=None)
     #    model_instance.pid = model_instance.pid + 1
         #os._exit(model_instance.pid)
         #del model_instance.pid
-    del model_instance.h
-    model_instance.h = h
+    #del model_instance.h
+    #model_instance.h = h
     set_runtime_parameters(model_instance, runtime_parameters)
     if stimulus_parameters == None:
         pass
