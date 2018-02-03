@@ -128,7 +128,7 @@ class PurkinjeCell( sciunit.Model,
         #os.chdir(cwd)  # reset to original directory
         #
         # discover no.cores in 1CPU & activate multisplit to use all cores
-        dcam(self)
+        #dcam(self)
         #
         # =========attributed inherited from sciunit.Model===============
         # pc.name defaults to class name, i.e, PurkinjeCell
@@ -289,7 +289,7 @@ class PurkinjeCell( sciunit.Model,
         #for d in self.cell.dend:
         #    if h.SectionRef(sec = d).has_parent != 0:
         #        h.disconnect(sec = d)
-        h.disconnect(sec = self.cell.dend[0])
+        self.h.disconnect(sec = self.cell.dend[0])
         # ====================================================================
         #print " Done!"
 
