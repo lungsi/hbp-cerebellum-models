@@ -63,7 +63,7 @@ def discover_cores_activate_multisplit(model):
     #model.parallelprocesses.multisplit(1)
     model.parallelcompute = model.h.ParallelContext()
     model.parallelcompute.nthread(cores, 0) # default 1
-    #model.parallelcompute.multisplit()
+    model.parallelcompute.multisplit()
     #print "cores", cores
 
 
