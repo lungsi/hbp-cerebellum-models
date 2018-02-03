@@ -244,7 +244,7 @@ def run_model(model_instance, runtime_parameters=None, stimulus_parameters=None)
     #model_instance.produce_voltage_response()
     model_instance.produce_spike_train()
     #
-    model.parallelprocesses.gid_clear()
+    model_instance.parallelprocesses.gid_clear()
 
 #
 #
