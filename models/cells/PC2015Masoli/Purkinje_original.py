@@ -11,7 +11,7 @@ import os # add-on to the original Purkinje.py
 from PC_param import pc_param 
 
 
-class Purkinje:
+class PurkinjeTemplate:
     def __init__(self):
 
         # =======Add-on to original Purkinje.py=======
